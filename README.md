@@ -4,7 +4,11 @@
 A Shopping Cart Bundle for Laravel, based on the Cart library from CodeIgniter.
 
 ## Installation
-Clone the project into **bundles/lara-cart**
+Install via artisan
+
+    php artisan bundle:install lara-cart
+
+or clone the project into **bundles/lara-cart**
 
 Then, update your bundles.php to auto-start the bundle.
 
