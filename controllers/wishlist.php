@@ -45,10 +45,27 @@ class Cartify_Wishlist_Controller extends Controller
 	}
 
 	/**
+	 * Empties the wishlist contents.
+	 *
+	 * @access   public
+	 * @return   void
+	 */
+	public function post_index()
+	{
+		// Let's make the wishlist empty!
+		//
+		Cartify::wishlist()->destroy();
+
+		// Redirect back to the wishlist page.
+		//
+		return Redirect::to('cartify/wishlist')->with('warning', 'Your wishlist was cleared!');
+	}
+
+	/**
 	 * Adds an item to the wishlist.
 	 *
 	 * @access   public
-	 * @paramstring
+	 * @param    string
 	 * @return   void
 	 */
 	public function get_add($item_id, $qty = 1)
@@ -73,8 +90,26 @@ class Cartify_Wishlist_Controller extends Controller
 		//
 		Cartify::wishlist()->add($product);
 
-		// Redirect back to the cart home.
+		// Redirect back to the wishlist page.
 		//
 		return Redirect::to('cartify/wishlist')->with('success', 'The product was added to your wishlist!');
+	}
+
+	/**
+	 * Removes an item from the wishlist.
+	 *
+	 * @access   public
+	 * @param    string
+	 * @return   void
+	 */
+	public function get_remove($item_id = null)
+	{
+		// Remove the item from the wishlist.
+		//
+		Cartify::wishlist()->remove($item_id);
+
+		// Redirect back to the wishlist page.
+		//
+		return Redirect::to('cartify/wishlist')->with('warning', 'The item was removed from the wishlist.');
 	}
 }

@@ -66,7 +66,7 @@ class Cartify_Cart_Controller extends Controller
 
 			// Update the cart contents.
 			//
-			Cartify::cart()->update( $items );
+			Cartify::cart()->update($items);
 
 			// Redirect back to the cart home.
 			//
@@ -83,7 +83,7 @@ class Cartify_Cart_Controller extends Controller
 
 			// Redirect back to the cart home.
 			//
-			return Redirect::to('cartify/cart')->with('warning', 'Your shopping cart was cleared !');
+			return Redirect::to('cartify/cart')->with('warning', 'Your shopping cart was cleared!');
 		}
 	}
 
@@ -122,9 +122,9 @@ class Cartify_Cart_Controller extends Controller
 
 		// Add the item to the cart.
 		//
-		Cartify::cart()->add( $product );
+		Cartify::cart()->add($product);
 
-		// Redirect back to the cart home.
+		// Redirect back to the cart page.
 		//
 		return Redirect::to('cartify/cart')->with('success', 'Product was added to the shopping cart!');
 	}
@@ -133,17 +133,17 @@ class Cartify_Cart_Controller extends Controller
 	 * Removes an item from the shopping cart.
 	 *
 	 * @access   public
-	 * @paramstring
+	 * @param    string
 	 * @return   void
 	 */
 	public function get_remove($item_id = null)
 	{
 		// Remove the item from the cart.
 		//
-		Cartify::cart()->remove( $item_id );
+		Cartify::cart()->remove($item_id);
 
-		// Redirect back to the cart home.
+		// Redirect back to the cart page.
 		//
-		return Redirect::to('cartify/cart')->with('warning', 'The item was removed from the shopping cart');
+		return Redirect::to('cartify/cart')->with('warning', 'The item was removed from the shopping cart.');
 	}
 }
