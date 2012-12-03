@@ -21,7 +21,7 @@ use Laravel\Config;
 use Laravel\Session;
 
 /**
- *
+ * Cart class.
  */
 class Cart
 {
