@@ -12,19 +12,13 @@
  * @link     https://github.com/bruno-g/cartify
  */
 
-
 /*
  * --------------------------------------------------------------------------
  * Return the configuration array.
  * --------------------------------------------------------------------------
  */
 return array(
-	// Cart settings.
+	// Cart session name.
 	//
-    'session_name' => 'laracommerce_contents',
-
-
-    // Wishlist settings.
-    //
-    'wishlist_session' => 'laracommerce_wishlist'
+	'session_name' => 'cartify_contents'
 );

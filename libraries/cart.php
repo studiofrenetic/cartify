@@ -62,6 +62,12 @@ class Cart
 	 */
 	protected $config = array();
 
+	/**
+	 * Holds the cart name.
+	 *
+	 * @access   protected
+	 * @var      string
+	 */
 	protected $cart_name = null;
 
 	/**
@@ -80,8 +86,7 @@ class Cart
 	 */
 	public function __construct($cart_name = null)
 	{
-		#Session::flush();
-		//
+		// Get the cart name.
 		//
 		$cart_name = (is_null($cart_name) ? Config::get('cartify::cart.session_name') : $cart_name);
 
@@ -93,32 +98,20 @@ class Cart
 		//
 		$this->config = Config::get('cartify::cart');
 
-		#if (isset($this->cart_contents[ $this->cart_name ]))
+		// Check if we have the Cart contents on the session.
+		//
 		if ($cart_contents = Session::get($this->cart_name))
 		{
 			$this->cart_contents[ $this->cart_name ] = $cart_contents;
-		}
-		else
-		{
-			$this->cart_contents[ $this->cart_name ]['cart_total']  = 0;
-			$this->cart_contents[ $this->cart_name ]['total_items'] = 0;
-		}
-
-
-		// Check if we have the Cart contents on the session.
-		//
-		/*if ($cart_contents = Session::get($this->cart_name))
-		{
-			$this->cart_contents = $cart_contents;
 		}
 
 		// We don't have any cart session, set some base values.
 		//
 		else
 		{
-			$this->cart_contents['cart_total']  = 0;
-			$this->cart_contents['total_items'] = 0;
-		}*/
+			$this->cart_contents[ $this->cart_name ]['cart_total']  = 0;
+			$this->cart_contents[ $this->cart_name ]['total_items'] = 0;
+		}
 	}
 
 	/**
@@ -541,8 +534,8 @@ class Cart
 	{
 		// Unset these so our total can be calculated correctly below.
 		//
-		unset( $this->cart_contents[ $this->cart_name ]['total_items'] );
-		unset( $this->cart_contents[ $this->cart_name ]['cart_total'] );
+		unset($this->cart_contents[ $this->cart_name ]['total_items']);
+		unset($this->cart_contents[ $this->cart_name ]['cart_total']);
 
 		// Initiate the needed counters.
 		//
@@ -604,11 +597,11 @@ class Cart
 	 * @param    integer
 	 * @return   integer
 	 */
-	public static function format_number($number = null)
+	public function format_number($number = null)
 	{
 		// Check if we have a valid number.
 		//
-		if ( is_null( $number ) )
+		if (is_null($number))
 		{
 			return '';
 		}
