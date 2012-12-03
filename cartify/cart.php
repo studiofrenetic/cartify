@@ -12,7 +12,7 @@ use Config, Session;
  * --------------------------------------------------------------------------
  * Lara Cart
  * --------------------------------------------------------------------------
- * 
+ *
  * A Shopping Cart based on the Cart library from CodeIgniter for use with
  * the Laravel Framework.
  *
@@ -21,7 +21,7 @@ use Config, Session;
  * @author   Bruno Gaspar <brunofgaspar@live.com.pt>
  * @link     https://github.com/bruno-g/lara-cart
  */
-class Cart
+class xCart
 {
     /**
      * Regular expression to validate product ID's.
@@ -69,7 +69,6 @@ class Cart
     public static $cart_contents = array();
 
 
-
     /**
      * --------------------------------------------------------------------------
      * Function: init()
@@ -88,7 +87,7 @@ class Cart
 
         // Check if we have the Cart contents on the session.
         //
-        if ( $cart_contents = Session::get( self::$config['session_name'] ) ):
+        if ( $cart_contents = Session::get( static::$config['session_name'] ) ):
             static::$cart_contents = $cart_contents;
 
         // We don't have any cart session, set some base values.
@@ -128,7 +127,7 @@ class Cart
         if ( isset($items['id']) ):
             // Try to add the item to the cart.
             //
-            if ( $rowid = self::_insert($items) ):
+            if ( $rowid = static::_insert($items) ):
                 $save_cart = true;
             endif;
 
@@ -143,7 +142,7 @@ class Cart
                 if ( is_array($item) and isset($item['id'] ) ):
                     // Try to add the item to the cart.
                     //
-                    if ( self::_insert($item) ):
+                    if ( static::_insert($item) ):
                         $save_cart = true;
                     endif;
                 endif;
@@ -261,7 +260,7 @@ class Cart
             // Success, item removed.
             //
             return true;
-        endif; 
+        endif;
 
         // Something went wrong.
         //
@@ -570,7 +569,7 @@ class Cart
         if ( count(static::$cart_contents) <= 2 ):
             // If so we delete it from the session
             //
-            self::destroy();
+            static::destroy();
 
             // Nothing more to do here...
             //
