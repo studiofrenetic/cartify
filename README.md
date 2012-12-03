@@ -135,7 +135,7 @@ In nearly all cases, updating the cart will be something the user does via the "
 ## Removing items from the Cart
 To remove an item from your cart, you must pass the Row ID to the Cartify::cart()->remove() method:
 
-    Cartify::cart->remove('fh4kdkkkaoe30njgoe92rkdkkobec333');
+    Cartify::cart()->remove('fh4kdkkkaoe30njgoe92rkdkkobec333');
 
 
 ## Displaying the Cart
