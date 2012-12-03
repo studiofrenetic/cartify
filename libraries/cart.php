@@ -14,9 +14,15 @@
 
 namespace Cartify\Libraries;
 
+/**
+ * Libraries we can use.
+ */
 use Laravel\Config;
 use Laravel\Session;
 
+/**
+ *
+ */
 class Cart
 {
 	/**
@@ -31,22 +37,22 @@ class Cart
 	 * @access   protected
 	 * @var      string
 	 */
-	protected $product_id_rules = '^.';//'\.a-z0-9_-';
+	protected $product_id_rules = '\.a-z0-9_-';
 
 	/**
 	 * Regular expression to validate product Names.
 	 *
 	 *  Allowed:
-	 *alpha-numeric
-	 *dashes
-	 *underscores
-	 *colons
-	 *periods
+	 *		alpha-numeric
+	 *		dashes
+	 *		underscores
+	 *		colons
+	 *		periods
 	 *
 	 * @access   protected
 	 * @var      string
 	 */
-	protected $product_name_rules = '^.';//'\.\:\-_ a-z0-9';
+	protected $product_name_rules = '\.\:\-_ a-z0-9';
 
 	/**
 	 * Shopping Cart config.
@@ -55,6 +61,8 @@ class Cart
 	 * @var      array
 	 */
 	protected $config = array();
+
+	protected $cart_name = null;
 
 	/**
 	 * Shopping Cart contents.
@@ -70,15 +78,36 @@ class Cart
 	 * @access   public
 	 * @return   void
 	 */
-	public function __construct()
+	public function __construct($cart_name = null)
 	{
+		#Session::flush();
+		//
+		//
+		$cart_name = (is_null($cart_name) ? Config::get('cartify::cart.session_name') : $cart_name);
+
+		// Store the cart name.
+		//
+		$this->cart_name = $cart_name;
+
 		// Get the Cart configuration.
 		//
-		$this->config = \Config::get('cartify::cart');
+		$this->config = Config::get('cartify::cart');
+
+		#if (isset($this->cart_contents[ $this->cart_name ]))
+		if ($cart_contents = Session::get($this->cart_name))
+		{
+			$this->cart_contents[ $this->cart_name ] = $cart_contents;
+		}
+		else
+		{
+			$this->cart_contents[ $this->cart_name ]['cart_total']  = 0;
+			$this->cart_contents[ $this->cart_name ]['total_items'] = 0;
+		}
+
 
 		// Check if we have the Cart contents on the session.
 		//
-		if ($cart_contents = \Session::get($this->config['session_name']))
+		/*if ($cart_contents = Session::get($this->cart_name))
 		{
 			$this->cart_contents = $cart_contents;
 		}
@@ -89,9 +118,8 @@ class Cart
 		{
 			$this->cart_contents['cart_total']  = 0;
 			$this->cart_contents['total_items'] = 0;
-		}
+		}*/
 	}
-
 
 	/**
 	 * Insert items into the cart.
@@ -275,7 +303,7 @@ class Cart
 	 */
 	public function total()
 	{
-		return $this->cart_contents['cart_total'];
+		return $this->cart_contents[ $this->cart_name ]['cart_total'];
 	}
 
 
@@ -287,7 +315,7 @@ class Cart
 	 */
 	public function total_items()
 	{
-		return $this->cart_contents['total_items'];
+		return $this->cart_contents[ $this->cart_name ]['total_items'];
 	}
 
 	/**
@@ -300,7 +328,7 @@ class Cart
 	{
 		// Get the cart contents.
 		//
-		$cart = $this->cart_contents;
+		$cart = $this->cart_contents[ $this->cart_name ];
 
 		// Remove these so they don't create a problem when showing the cart table.
 		//
@@ -326,7 +354,7 @@ class Cart
 	{
 		// Check if this product have options.
 		//
-		if ( ! isset($this->cart_contents[ $rowid ]['options']) or count($this->cart_contents[ $rowid ]['options']) === 0)
+		if ( ! isset($this->cart_contents[ $this->cart_name ][ $rowid ]['options']) or count($this->cart_contents[ $this->cart_name ][ $rowid ]['options']) === 0)
 		{
 			// We don't have options for this item.
 			//
@@ -358,7 +386,7 @@ class Cart
 
 		// Return this product options.
 		//
-		return $this->cart_contents[ $rowid ]['options'];
+		return $this->cart_contents[ $this->cart_name ][ $rowid ]['options'];
 	}
 
 	/**
@@ -435,17 +463,17 @@ class Cart
 
 		// Let's unset this first, just to make sure our index contains only the data from this submission.
 		//
-		unset($this->cart_contents[ $rowid ]);
+		unset($this->cart_contents[ $this->cart_name ][ $rowid ]);
 
 		// Create a new index with our new row ID.
 		//
-		$this->cart_contents[ $rowid ]['rowid'] = $rowid;
+		$this->cart_contents[ $this->cart_name ][ $rowid ]['rowid'] = $rowid;
 
 		// And add the new items to the cart array.
 		//
 		foreach ($items as $key => $val)
 		{
-			$this->cart_contents[ $rowid ][ $key ] = $val;
+			$this->cart_contents[ $this->cart_name ][ $rowid ][ $key ] = $val;
 		}
 
 		// Item added with success.
@@ -464,7 +492,7 @@ class Cart
 	{
 		// Make sure the array contains the proper indexes.
 		//
-		if ( ! isset($items['qty']) or ! isset($items['rowid']) or ! isset($this->cart_contents[ $items['rowid'] ]))
+		if ( ! isset($items['qty']) or ! isset($items['rowid']) or ! isset($this->cart_contents[ $this->cart_name ][ $items['rowid'] ]))
 		{
 			return false;
 		}
@@ -482,7 +510,7 @@ class Cart
 
 		// Is the new quantity different than what is already saved in the cart?
 		// If it's the same there's nothing to do
-		if ($this->cart_contents[ $items['rowid'] ]['qty'] == $items['qty'])
+		if ($this->cart_contents[ $this->cart_name ][ $items['rowid'] ]['qty'] == $items['qty'])
 		{
 			return false;
 		}
@@ -491,11 +519,11 @@ class Cart
 		// If the quantity is greater than zero we are updating
 		if ($items['qty'] == 0)
 		{
-			unset($this->cart_contents[ $items['rowid'] ]);
+			unset($this->cart_contents[ $this->cart_name ][ $items['rowid'] ]);
 		}
 		else
 		{
-			$this->cart_contents[ $items['rowid'] ]['qty'] = $items['qty'];
+			$this->cart_contents[ $this->cart_name ][ $items['rowid'] ]['qty'] = $items['qty'];
 		}
 
 		// Cart updated.
@@ -513,8 +541,8 @@ class Cart
 	{
 		// Unset these so our total can be calculated correctly below.
 		//
-		unset( $this->cart_contents['total_items'] );
-		unset( $this->cart_contents['cart_total'] );
+		unset( $this->cart_contents[ $this->cart_name ]['total_items'] );
+		unset( $this->cart_contents[ $this->cart_name ]['cart_total'] );
 
 		// Initiate the needed counters.
 		//
@@ -523,7 +551,7 @@ class Cart
 
 		// Loop through the cart items.
 		//
-		foreach ($this->cart_contents as $rowid => $item)
+		foreach ($this->cart_contents[ $this->cart_name ] as $rowid => $item)
 		{
 			// Make sure the array contains the proper indexes.
 			//
@@ -539,17 +567,17 @@ class Cart
 
 			// Set the subtotal of this item.
 			//
-			$this->cart_contents[ $rowid ]['subtotal'] = ($this->cart_contents[ $rowid ]['price'] * $this->cart_contents[ $rowid ]['qty']);
+			$this->cart_contents[ $this->cart_name ][ $rowid ]['subtotal'] = ($this->cart_contents[ $this->cart_name ][ $rowid ]['price'] * $this->cart_contents[ $this->cart_name ][ $rowid ]['qty']);
 		}
 
 		// Set the cart total and total items.
 		//
-		$this->cart_contents['total_items'] = $items;
-		$this->cart_contents['cart_total']  = $total;
+		$this->cart_contents[ $this->cart_name ]['total_items'] = $items;
+		$this->cart_contents[ $this->cart_name ]['cart_total']  = $total;
 
 		// Is our cart empty?
 		//
-		if (count($this->cart_contents) <= 2)
+		if (count($this->cart_contents[ $this->cart_name ]) <= 2)
 		{
 			// If so we delete it from the session
 			//
@@ -562,7 +590,7 @@ class Cart
 
 		// Update the cart session data.
 		//
-		Session::put($this->config['session_name'], $this->cart_contents);
+		Session::put($this->cart_name, $this->cart_contents[ $this->cart_name ]);
 
 		// Success.
 		//
@@ -604,13 +632,13 @@ class Cart
 	{
 		// Remove all the data from the cart and set some base values
 		//
-		$this->cart_contents = array(
+		$this->cart_contents[ $this->cart_name ] = array(
 			'cart_total'  => 0,
 			'total_items' => 0
 		);
 
 		// Remove the session.
 		//
-		Session::forget($this->config['session_name']);
+		Session::forget($this->cart_name);
 	}
 }

@@ -12,7 +12,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			@forelse ( Wishlist::contents() as $item )
+			@forelse ( Cartify::wishlist()->contents() as $item )
 			<tr>
 				<td>
 					<span class="span2 thumbnail"><img src="{{ URL::to_asset('img/products/' . $item['image']) }}" /></span>
@@ -23,7 +23,7 @@
 						<a href="{{ URL::to('cartify/wishlist/remove/' . $item['rowid']) }}" rel="tooltip" title="Remove the product" class="btn btn-mini btn-danger"><i class="icon icon-white icon-remove"></i></a>
 					</span>
 				</td>
-				<td>{{ Cart::format_number( $item['price'] ) }}</td>
+				<td>{{ Cartify::wishlist()->format_number( $item['price'] ) }}</td>
 			</tr>
 			@empty
 			<tr>
@@ -33,7 +33,7 @@
 		</tbody>
 	</table>
 
-	@if ( Wishlist::total() )
+	@if ( Cartify::wishlist()->total() )
 	<button type="submit" id="empty" name="empty" value="1" class="btn btn-warning">Empty your Wishlist</button>
 	@endif
 </form>

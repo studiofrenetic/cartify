@@ -17,7 +17,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="brand" href="{{ URL::to('cartify') }}">Lara Cart</a>
+					<a class="brand" href="{{ URL::to('cartify') }}">Cartify</a>
 					<div class="nav-collapse collapse">
 						<ul class="nav">
 							<li{{ ( URI::segment(2) == '' ? ' class="active"': '' ) }}><a href="{{ URL::to('cartify') }}">Home</a></li>

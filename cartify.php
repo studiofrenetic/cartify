@@ -25,13 +25,31 @@ use Cartify\Libraries\Whishlist;
  */
 class Cartify
 {
-	public static function cart()
+	/**
+	 * Return a new Cart() object.
+	 *
+	 * @access   public
+	 * @param    string
+	 * @return   object
+	 */
+	public static function cart($cart_name = null)
 	{
-		return new Cart();
+		// Return the cart object.
+		//
+		return new Cart($cart_name);
 	}
 
-	public static function wishlist()
+	/**
+	 * Returns a new Cart() object with the wishlist name.
+	 *
+	 * @access   public
+	 * @param    string
+	 * @return   object
+	 */
+	public static function wishlist($wishlist_name = 'wishlist')
 	{
-		return new Wishlist();
+		// Return the cart object.
+		//
+		return new Cart($wishlist_name);
 	}
 }
