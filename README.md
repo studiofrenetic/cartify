@@ -33,7 +33,6 @@ To add an item to the shopping cart, simply pass an array with the product infor
 
     Cartify::cart()->add($item);
 
-
 ####Important:
     The first four array indexes above (id, qty, price, and name) are required.
     If you omit any of them the data will not be saved to the cart.
@@ -82,11 +81,11 @@ By using a multi-dimensional array, as shown below, it is possible to add multip
         )
     );
 
-    Cart::add( $items );
+    Cartify::cart()->add($items);
 
 
 ## Updating the Cart
-To update the information in your cart, you must pass an array containing the Row ID and quantity to the Cart::update() method:
+To update the information in your cart, you must pass an array containing the Row ID and quantity to the Cartify::cart()->update() method:
 
 ####Note:
     If the quantity is set to zero, the item will be removed from the cart.
@@ -98,7 +97,7 @@ To update the information in your cart, you must pass an array containing the Ro
         'qty'   => 3
     );
 
-    Cart::update( $item );
+    Cartify::cart()->update($item);
 
 
 **Updating multiple items:**
@@ -118,7 +117,7 @@ To update the information in your cart, you must pass an array containing the Ro
         )
     );
 
-    Cart::update( $items );
+    Cartify::cart()->update($items);
 
 
 ####What is a Row ID?
@@ -129,52 +128,59 @@ For example, let's say someone buys two identical t-shirts (same product ID), bu
 In nearly all cases, updating the cart will be something the user does via the "view cart" page, so as a developer, it is unlikely that you will ever have to concern yourself with the "row ID", other then making sure your "view cart" page contains this information in a hidden form field, and making sure it gets passed to the update function when the update form is submitted. Please examine the construction of the "view cart" page above for more information.
 
 
-
 ## Removing items from the Cart
-To remove an item from your cart, you must pass the Row ID to the Cart::remove() method:
+To remove an item from your cart, you must pass the Row ID to the Cartify::cart()->remove() method:
 
-    Cart::remove('fh4kdkkkaoe30njgoe92rkdkkobec333');
+    Cartify::cart->remove('fh4kdkkkaoe30njgoe92rkdkkobec333');
 
 
 ## Displaying the Cart
-To display the cart you will create a view file with code similar to the one shown below.
-
-TODO..
+To display the cart you will create a view file with code similar to the one shown in cart.blade.php view file.
 
 
 ## Function Reference
 
-    Cart::add();
+    Cartify::cart()->add();
 Permits you to add items to the shopping cart.
 
-    Cart::update();
+    Cartify::cart()->update();
 Permits you to update items in the shopping cart.
 
-    Cart::remove(rowid);
+    Cartify::cart()->remove(rowid);
 Permits you to remove an item from the shopping cart.
 
-    Cart::total();
+    Cartify::cart()->total();
 Displays the total amount in the cart.
 
-    Cart::total_items();
+    Cartify::cart()->total_items();
 Displays the total number of items in the cart.
 
-    Cart::contents();
+    Cartify::cart()->contents();
 Returns an array containing everything in the cart.
 
     Cart:has_options(rowid);
-Returns TRUE (boolean) if a particular row in the cart contains options. This function is designed to be used in a loop with Cart::contents(), since you must pass the rowid to this function, as shown in the Displaying the Cart example above.
+Returns TRUE (boolean) if a particular row in the cart contains options. This function is designed to be used in a loop with Cartify::cart()->contents(), since you must pass the rowid to this function, as shown in the Displaying the Cart example above.
 
-    Cart::product_options(rowid);
-Returns an array of options for a particular product. This function is designed to be used in a loop with Cart::contents(), since you must pass the rowid to this function, as shown in the Displaying the Cart example above.
+    Cartify::cart()->product_options(rowid);
+Returns an array of options for a particular product. This function is designed to be used in a loop with Cartify::cart()->contents(), since you must pass the rowid to this function, as shown in the Displaying the Cart example above.
 
-    Cart::destroy();
+    Cartify::cart()->destroy();
 Permits you to destroy the cart. This function will likely be called when you are finished processing the customer's order.
+
+
+## Multi instances of the Cart
+It is now possible to have multi instances of the cart class.
+
+You just need to pass in the name of the cart like so:
+
+    Cartify::cart('my_other_cart')->add($item);
+
+It is included an Whishlist method to help you, and you can even create multiple wishlist's aswell, like so:
+
+    Cartify::wishlist()->add($item);
+    Cartify::wishlist('my_other_wishlist')->add($item);
 
 
 ## Credits
     CodeIgniter for writing this Library.
     Twitter for the awesome Bootstrap framework.
-
-
-
