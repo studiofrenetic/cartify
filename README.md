@@ -1,30 +1,24 @@
-## Lara Cart
-**Version: 1.0**
+## Cartify
+**Version: 2.0.0**
 
 A Shopping Cart Bundle for Laravel, based on the Cart library from CodeIgniter.
 
 ## Installation
-Install via artisan
-
-    php artisan bundle:install lara-cart
-
-or clone the project into **bundles/lara-cart**
+Clone the project into **bundles/cartify**
 
 Then, update your bundles.php to auto-start the bundle.
 
     return array(
-        'lara-cart' => array( 'auto' => true )
+        'cartify' => array('auto' => true)
     );
 
-Then move the **public** folder outside the **bundles/lara-cart** folder.
-
 ## Viewing the Example
-Just navigate to the page **cart**, example
+Just navigate to the page **cartify**, example
 
-    http://laravel.local/public/cart
+    http://laravel.local/public/cartify
 
 ## Adding an Item to The Cart
-To add an item to the shopping cart, simply pass an array with the product information to the Cart::add() method, as shown below:
+To add an item to the shopping cart, simply pass an array with the product information to the Cartify::cart()->add() method, as shown below:
 
     $item = array(
         'id'      => 'sku_123ABC',
@@ -37,7 +31,7 @@ To add an item to the shopping cart, simply pass an array with the product infor
         )
     );
 
-    Cart::add( $item );
+    Cartify::cart()->add($item);
 
 
 ####Important:
