@@ -1,21 +1,37 @@
 <?php
+/**
+ * --------------------------------------------------------------------------
+ * Cartify
+ * --------------------------------------------------------------------------
+ *
+ * Cartify, a shopping cart bundle for use with the Laravel Framework.
+ *
+ * @package  Cartify
+ * @version  2.0.0
+ * @author   Bruno Gaspar <brunofgaspar1@gmail.com>
+ * @link     https://github.com/bruno-g/cartify
+ */
 
-## This file is for the examples only!
-
+/**
+ * Libraries we can use.
+ */
 use Cartify\Models\Products;
+
+/**
+ * This file is for the examples only!
+ */
 
 class Cartify_Wishlist_Controller extends Controller
 {
-	// Make it RESTful
-	//
+	/**
+	 * Flag for whether the controller is RESTful.
+	 *
+	 * @access   public
+	 * @var      boolean
+	 */
 	public $restful = true;
 
-
-   /**
-	 * --------------------------------------------------------------------------
-	 * Function: get_index()
-	 * --------------------------------------------------------------------------
-	 *
+	/**
 	 * Show a list of the products on the wishlist.
 	 *
 	 * @access   public
@@ -28,12 +44,7 @@ class Cartify_Wishlist_Controller extends Controller
 		return View::make('cartify::wishlist');
 	}
 
-
-   /**
-	 * --------------------------------------------------------------------------
-	 * Function: get_index()
-	 * --------------------------------------------------------------------------
-	 *
+	/**
 	 * Adds an item to the wishlist.
 	 *
 	 * @access   public
@@ -51,15 +62,13 @@ class Cartify_Wishlist_Controller extends Controller
 		// Add the qty to the product information.
 		//
 		$product = array(
-		'id'  => $info['id'],
-		'qty' => $qty,
-		'price'   => $info['price'],
-		'name'=> $info['name'],
-		'image'=> $info['image'],
-		'options' => $options
+			'id'      => $info['id'],
+			'qty'     => $qty,
+			'price'   => $info['price'],
+			'name'    => $info['name'],
+			'image'   => $info['image']
 		);
 
-die;
 		// Add the item to the wishlist.
 		//
 		Cartify::wishlist()->add($product);

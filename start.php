@@ -7,7 +7,7 @@
  * Cartify, a shopping cart bundle for use with the Laravel Framework.
  *
  * @package  Cartify
- * @version  1.0.0
+ * @version  2.0.0
  * @author   Bruno Gaspar <brunofgaspar1@gmail.com>
  * @link     https://github.com/bruno-g/cartify
  */
@@ -29,13 +29,3 @@ Autoloader::namespaces(array(
  * --------------------------------------------------------------------------
  */
 Autoloader::alias('Cartify\\Cartify', 'Cartify');
-#Autoloader::alias('Cartify\\Cart', 'Cart');
-#Autoloader::alias('Cartify\\Wishlist', 'Wishlist');
-
-/*
- * --------------------------------------------------------------------------
- * Initialize the Cart.
- * --------------------------------------------------------------------------
- */
-#Cartify::init();
-#Wishlist::init('Wishlist');
