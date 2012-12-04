@@ -1,12 +1,12 @@
-**Version: 2.0.1**
+**Version: 2.1.0**
 
+	* Now almost every method throws Exceptions.
+	* Renamed the cart add() method to insert()
 	* Added an helpers file.
 	* format_number() is no longer a method in the cart library, it is now a function inside the helpers file.
-	* Renamed the cart add() method to insert()
-	* Added in a few Exceptions.
-	* Some code improvements.
+	* Code improvements.
 	* Updated the examples.
-	* Added the assets folder, missing in the previous version.
+	* Added the public folder, which contains the needed assets for the examples.
 
 **Version: 2.0.0**
 
