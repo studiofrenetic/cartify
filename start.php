@@ -7,7 +7,7 @@
  * Cartify, a shopping cart bundle for use with the Laravel Framework.
  *
  * @package  Cartify
- * @version  2.0.0
+ * @version  2.0.1
  * @author   Bruno Gaspar <brunofgaspar1@gmail.com>
  * @link     https://github.com/bruno-g/cartify
  */
@@ -29,3 +29,10 @@ Autoloader::namespaces(array(
  * --------------------------------------------------------------------------
  */
 Autoloader::alias('Cartify\\Cartify', 'Cartify');
+
+/*
+ * --------------------------------------------------------------------------
+ * Include our helpers file.
+ * --------------------------------------------------------------------------
+ */
+require_once __DIR__ . DS . 'helpers.php';

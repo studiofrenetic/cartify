@@ -7,7 +7,7 @@
  * Cartify, a shopping cart bundle for use with the Laravel Framework.
  *
  * @package  Cartify
- * @version  2.0.0
+ * @version  2.0.1
  * @author   Bruno Gaspar <brunofgaspar1@gmail.com>
  * @link     https://github.com/bruno-g/cartify
  */
@@ -17,6 +17,7 @@ namespace Cartify\Libraries;
 /**
  * Libraries we can use.
  */
+use Exception;
 use Laravel\Config;
 use Laravel\Session;
 
@@ -26,7 +27,7 @@ use Laravel\Session;
 class Cart
 {
 	/**
-	 * Regular expression to validate product ID's.
+	 * Regular expression to validate item ID's.
 	 *
 	 *  Allowed:
 	 *		alpha-numeric
@@ -37,10 +38,10 @@ class Cart
 	 * @access   protected
 	 * @var      string
 	 */
-	protected $product_id_rules = '\.a-z0-9_-';
+	protected $item_id_rules = '\.a-z0-9_-';
 
 	/**
-	 * Regular expression to validate product Names.
+	 * Regular expression to validate item Names.
 	 *
 	 *  Allowed:
 	 *		alpha-numeric
@@ -52,15 +53,7 @@ class Cart
 	 * @access   protected
 	 * @var      string
 	 */
-	protected $product_name_rules = '\.\:\-_ a-z0-9';
-
-	/**
-	 * Shopping Cart config.
-	 *
-	 * @access   protected
-	 * @var      array
-	 */
-	protected $config = array();
+	protected $item_name_rules = '\.\:\-_ a-z0-9';
 
 	/**
 	 * Holds the cart name.
@@ -73,10 +66,10 @@ class Cart
 	/**
 	 * Shopping Cart contents.
 	 *
-	 * @access   public
+	 * @access   protected
 	 * @var      array
 	 */
-	public $cart_contents = array();
+	protected $cart_contents = array();
 
 	/**
 	 * Shopping cart initializer.
@@ -86,17 +79,9 @@ class Cart
 	 */
 	public function __construct($cart_name = null)
 	{
-		// Get the cart name.
-		//
-		$cart_name = (is_null($cart_name) ? Config::get('cartify::cart.session_name') : $cart_name);
-
 		// Store the cart name.
 		//
-		$this->cart_name = $cart_name;
-
-		// Get the Cart configuration.
-		//
-		$this->config = Config::get('cartify::cart');
+		$this->cart_name = (is_null($cart_name) ? Config::get('cartify::cart.session_name') : $cart_name);
 
 		// Check if we have the Cart contents on the session.
 		//
@@ -119,30 +104,31 @@ class Cart
 	 *
 	 * @access   public
 	 * @param    array
-	 * @return   boolean
+	 * @return   mixed
+	 * @throws   Exception
 	 */
-	public function add($items = array())
+	public function insert($items = array())
 	{
-		// Check if we have data passed.
+		// Check if we have data.
 		//
 		if ( ! is_array($items) or count($items) == 0)
 		{
-			return false;
+			throw new Exception('Invalid data passed, an array is expected!');
 		}
 
-		// We only update the cart when we insert data into it..
+		// We only update the cart when we insert data into it.
 		//
-		$save_cart = false;
+		$update_cart = false;
 
-		// Single item.
+		// Single item?
 		//
-		if (isset($items['id']))
+		if ( ! isset($items[0]))
 		{
-			// Try to add the item to the cart.
+			// Check if the item was added to the cart.
 			//
 			if ($rowid = $this->_insert($items))
 			{
-				$save_cart = true;
+				$update_cart = true;
 			}
 		}
 
@@ -154,29 +140,24 @@ class Cart
 			//
 			foreach ($items as $item)
 			{
-				// Validate the item.
+				// Check if the item was added to the cart.
 				//
-				if (is_array($item) and isset($item['id']))
+				if ($this->_insert($item))
 				{
-					// Try to add the item to the cart.
-					//
-					if ($this->_insert($item))
-					{
-						$save_cart = true;
-					}
+					$update_cart = true;
 				}
 			}
 		}
 
 		// Update the cart if the insert was successful.
 		//
-		if ($save_cart)
+		if ($update_cart)
 		{
 			// Update the cart.
 			//
 			$this->update_cart();
 
-			// See what we want to return..
+			// See what we want to return.
 			//
 			return (isset($rowid) ? $rowid : true);
 		}
@@ -192,6 +173,7 @@ class Cart
 	 * @access   public
 	 * @param    array
 	 * @return   boolean
+	 * @throws   Exception
 	 */
 	public function update($items = array())
 	{
@@ -199,12 +181,12 @@ class Cart
 		//
 		if ( ! is_array($items) or count($items) == 0)
 		{
-			return false;
+			throw new Exception('Invalid data passed, an array is expected!');
 		}
 
-		// We only update the cart when we insert data into it..
+		// We only update the cart when we insert data into it.
 		//
-		$save_cart = false;
+		$update_cart = false;
 
 		// Single item.
 		//
@@ -212,9 +194,9 @@ class Cart
 		{
 			// Try to update the item.
 			//
-			if ($this->_update($items) == true)
+			if ($this->_update($items) === true)
 			{
-				$save_cart = true;
+				$update_cart = true;
 			}
 		}
 
@@ -234,7 +216,7 @@ class Cart
 					//
 					if ($this->_update($item))
 					{
-						$save_cart = true;
+						$update_cart = true;
 					}
 				}
 			}
@@ -242,7 +224,7 @@ class Cart
 
 		// Update the cart if the insert was successful.
 		//
-		if ($save_cart)
+		if ($update_cart)
 		{
 			// Update the cart.
 			//
@@ -264,6 +246,7 @@ class Cart
 	 * @access   public
 	 * @param    integer
 	 * @return   boolean
+	 * @throws   Exception
 	 */
 	public function remove($rowid = null)
 	{
@@ -271,7 +254,7 @@ class Cart
 		//
 		if (is_null($rowid))
 		{
-			return false;
+			throw new Exception('You need to pass a row id.');
 		}
 
 		// Try to remove the item.
@@ -298,7 +281,6 @@ class Cart
 	{
 		return $this->cart_contents[ $this->cart_name ]['cart_total'];
 	}
-
 
 	/**
 	 * Returns the total item count.
@@ -345,7 +327,7 @@ class Cart
 	 */
 	public function has_options($rowid = null)
 	{
-		// Check if this product have options.
+		// Check if this item have options.
 		//
 		if ( ! isset($this->cart_contents[ $this->cart_name ][ $rowid ]['options']) or count($this->cart_contents[ $this->cart_name ][ $rowid ]['options']) === 0)
 		{
@@ -354,21 +336,21 @@ class Cart
 			return false;
 		}
 
-		// We have options for this product.
+		// We have options for this item.
 		//
 		return true;
 	}
 
 	/**
-	 * Returns an array of options, for a particular product row ID.
+	 * Returns an array of options, for a particular item row ID.
 	 *
 	 * @access   public
 	 * @param    integer
 	 * @return   array
 	 */
-	public function product_options($rowid = null)
+	public function item_options($rowid = null)
 	{
-		// Check if this product have options.
+		// Check if this item have options.
 		//
 		if ( ! $this->has_options($rowid))
 		{
@@ -377,7 +359,7 @@ class Cart
 			return array();
 		}
 
-		// Return this product options.
+		// Return this item options.
 		//
 		return $this->cart_contents[ $this->cart_name ][ $rowid ]['options'];
 	}
@@ -385,73 +367,83 @@ class Cart
 	/**
 	 * Insert an item into the cart.
 	 *
-	 * @access   private
+	 * @access   protected
 	 * @param    array
-	 * @return   mixed
+	 * @return   integer
+	 * @throws   Exception
 	 */
-	private function _insert($items = array())
+	protected function _insert($item = array())
 	{
 		// Check if we have data.
 		//
-		if ( ! is_array($items) or count($items) == 0)
+		if ( ! is_array($item) or count($item) == 0)
 		{
-			return false;
+			throw new Exception('Invalid data passed, an array is expected!');
 		}
 
-		// Make sure the array contains the proper indexes.
+		// Required indexes.
 		//
-		if ( ! isset($items['id']) or ! isset($items['qty']) or ! isset($items['price']) or ! isset($items['name']))
+		$required_indexes = array('id', 'qty', 'price', 'name');
+
+		// Loop through the required indexes.
+		//
+		foreach ($required_indexes as $index)
 		{
-			return false;
+			// Make sure the array contains this index.
+			//
+			if ( ! isset($item[ $index ]))
+			{
+				throw new Exception('Required index [' . $index . '] is missing.');
+			}
 		}
 
 		// Prepare the quantity.
 		//
-		$items['qty'] = trim(preg_replace('/([^0-9])/i', '', $items['qty']));
-		$items['qty'] = trim(preg_replace('/(^[0]+)/i', '', $items['qty']));
+		$item['qty'] = trim(preg_replace('/([^0-9])/i', '', $item['qty']));
+		$item['qty'] = trim(preg_replace('/(^[0]+)/i', '', $item['qty']));
 
 		// If the quantity is zero or blank there's nothing for us to do.
 		//
-		if ( ! is_numeric($items['qty']) OR $items['qty'] == 0)
+		if ( ! is_numeric($item['qty']) OR $item['qty'] == 0)
 		{
 			return false;
 		}
 
-		// Validate the product id.
+		// Validate the item id.
 		//
-		if ( ! preg_match("/^[" . $this->product_id_rules . "]+$/i", $items['id']))
+		if ( ! preg_match("/^[" . $this->item_id_rules . "]+$/i", $item['id']))
 		{
 			return false;
 		}
 
-		// Validate the product name.
+		// Validate the item name.
 		//
-		if ( ! preg_match("/^[" . $this->product_name_rules . "]+$/i", $items['name']))
+		if ( ! preg_match("/^[" . $this->item_name_rules . "]+$/i", $item['name']))
 		{
 			return false;
 		}
 
 		// Prepare the price.
 		//
-		$items['price'] = trim(preg_replace('/([^0-9\.])/i', '', $items['price']));
-		$items['price'] = trim(preg_replace('/(^[0]+)/i', '', $items['price']));
+		$item['price'] = trim(preg_replace('/([^0-9\.])/i', '', $item['price']));
+		$item['price'] = trim(preg_replace('/(^[0]+)/i', '', $item['price']));
 
 		// Is the price a valid number?
 		//
-		if ( ! is_numeric($items['price']))
+		if ( ! is_numeric($item['price']))
 		{
 			return false;
 		}
 
 		// Create a unique identifier.
 		//
-		if (isset($items['options']) and count($items['options']) > 0)
+		if (isset($item['options']) and count($item['options']) > 0)
 		{
-			$rowid = md5($items['id'] . implode('', $items['options']));
+			$rowid = md5($item['id'] . implode('', $item['options']));
 		}
 		else
 		{
-			$rowid = md5($items['id']);
+			$rowid = md5($item['id']);
 		}
 
 		// Let's unset this first, just to make sure our index contains only the data from this submission.
@@ -462,9 +454,9 @@ class Cart
 		//
 		$this->cart_contents[ $this->cart_name ][ $rowid ]['rowid'] = $rowid;
 
-		// And add the new items to the cart array.
+		// And add the new item to the cart array.
 		//
-		foreach ($items as $key => $val)
+		foreach ($item as $key => $val)
 		{
 			$this->cart_contents[ $this->cart_name ][ $rowid ][ $key ] = $val;
 		}
@@ -477,46 +469,66 @@ class Cart
 	/**
 	 * Updates the cart items.
 	 *
-	 * @access   private
+	 * @access   protected
 	 * @param    array
 	 * @return   boolean
+	 * @throws   Exception
 	 */
-	private function _update($items = array())
+	protected function _update($item = array())
 	{
-		// Make sure the array contains the proper indexes.
+		// Check if the item exists in the cart.
 		//
-		if ( ! isset($items['qty']) or ! isset($items['rowid']) or ! isset($this->cart_contents[ $this->cart_name ][ $items['rowid'] ]))
+		if ( ! isset($this->cart_contents[ $this->cart_name ][ $item['rowid'] ]))
 		{
-			return false;
+			throw new Exception('Item does not exist!');
+		}
+
+		// Required indexes.
+		//
+		$required_indexes = array('qty', 'rowid');
+
+		// Loop through the required indexes.
+		//
+		foreach ($required_indexes as $index)
+		{
+			// Make sure the array contains this index.
+			//
+			if ( ! isset($item[ $index ]))
+			{
+				throw new Exception('Required index [' . $index . '] is missing.');
+			}
 		}
 
 		// Prepare the quantity.
 		//
-		$items['qty'] = trim(preg_replace('/([^0-9])/i', '', $items['qty']));
+		$item['qty'] = trim(preg_replace('/([^0-9])/i', '', $item['qty']));
 
 		// Is the quantity a number ?
 		//
-		if ( ! is_numeric($items['qty']))
+		if ( ! is_numeric($item['qty']))
 		{
-			return false;
+			throw new Exception('Quantity needs to be numeric!');
 		}
 
-		// Is the new quantity different than what is already saved in the cart?
-		// If it's the same there's nothing to do
-		if ($this->cart_contents[ $this->cart_name ][ $items['rowid'] ]['qty'] == $items['qty'])
+		// If the new quantaty is the same the already in the cart, there is nothing to update.
+		//
+		if ($this->cart_contents[ $this->cart_name ][ $item['rowid'] ]['qty'] == $item['qty'])
 		{
-			return false;
+			return true;
 		}
 
-		// Is the quantity zero?  If so we will remove the item from the cart.
-		// If the quantity is greater than zero we are updating
-		if ($items['qty'] == 0)
+		// If the quantity is zero, we will be removing the item from the cart.
+		//
+		if ($item['qty'] == 0)
 		{
-			unset($this->cart_contents[ $this->cart_name ][ $items['rowid'] ]);
+			unset($this->cart_contents[ $this->cart_name ][ $item['rowid'] ]);
 		}
+
+		// Quantity is greater than zero, let's update the item cart.
+		//
 		else
 		{
-			$this->cart_contents[ $this->cart_name ][ $items['rowid'] ]['qty'] = $items['qty'];
+			$this->cart_contents[ $this->cart_name ][ $item['rowid'] ]['qty'] = $item['qty'];
 		}
 
 		// Cart updated.
@@ -588,31 +600,6 @@ class Cart
 		// Success.
 		//
 		return true;
-	}
-
-	/**
-	 * Returns the supplied number with commas and a decimal point.
-	 *
-	 * @access   public
-	 * @param    integer
-	 * @return   integer
-	 */
-	public function format_number($number = null)
-	{
-		// Check if we have a valid number.
-		//
-		if (is_null($number))
-		{
-			return '';
-		}
-
-		// Remove anything that isn't a number or decimal point.
-		//
-		$number = trim(preg_replace('/([^0-9\.])/i', '', $number));
-
-		// Return the formated number.
-		//
-		return number_format($number, 2, '.', ',');
 	}
 
 	/**

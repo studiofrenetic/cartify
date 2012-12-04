@@ -7,7 +7,7 @@
  * Cartify, a shopping cart bundle for use with the Laravel Framework.
  *
  * @package  Cartify
- * @version  2.0.0
+ * @version  2.0.1
  * @author   Bruno Gaspar <brunofgaspar1@gmail.com>
  * @link     https://github.com/bruno-g/cartify
  */
@@ -41,7 +41,7 @@ class Cartify_Cart_Controller extends Controller
 	{
 		// Show the page.
 		//
-		return View::make('cartify::cart');
+		return View::make('cartify::cart.index');
 	}
 
 	/**
@@ -88,11 +88,48 @@ class Cartify_Cart_Controller extends Controller
 	}
 
 	/**
+	 * Adds an item to the shopping cart.
+	 *
+	 * @access   public
+	 * @param    string
+	 * @return   void
+	 */
+	/*
+	public function get_add($item_id, $qty = 1)
+	{
+		$products = Products::get_list();
+
+		// Get the product information.
+		//
+		$info = $products[ $item_id ];
+
+		// Add the qty to the product information.
+		//
+		$product = array(
+			'id'      => $info['id'],
+			'qty'     => $qty,
+			'price'   => $info['price'],
+			'name'    => $info['name'],
+			'image'   => $info['image']
+		);
+
+		// Add the item to the wishlist.
+		//
+		Cartify::cart()->add($product);
+
+		// Redirect back to the wishlist page.
+		//
+		return Redirect::to('cartify/cart')->with('success', 'The product was added to your shopping cart!');
+	}
+	*/
+
+	/**
 	 * Adds a product to the shopping cart.
 	 *
 	 * @access   public
 	 * @return   void
 	 */
+	/*
 	public function post_add()
 	{
 		// Get the static list of products.
@@ -128,6 +165,7 @@ class Cartify_Cart_Controller extends Controller
 		//
 		return Redirect::to('cartify/cart')->with('success', 'Product was added to the shopping cart!');
 	}
+	*/
 
 	/**
 	 * Removes an item from the shopping cart.

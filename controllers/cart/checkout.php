@@ -12,44 +12,34 @@
  * @link     https://github.com/bruno-g/cartify
  */
 
-namespace Cartify;
-
 /**
  * Libraries we can use.
  */
-use Cartify\Libraries\Cart;
-use Cartify\Libraries\Whishlist;
+use Cartify\Models\Products;
 
 /**
- * Cartify class.
+ * This file is for the examples only!
  */
-class Cartify
+class Cartify_Cart_Checkout_Controller extends Controller
 {
 	/**
-	 * Return a new Cart() object.
+	 * Flag for whether the controller is RESTful.
 	 *
 	 * @access   public
-	 * @param    string
-	 * @return   object
+	 * @var      boolean
 	 */
-	public static function cart($cart_name = null)
-	{
-		// Return the cart object.
-		//
-		return new Cart($cart_name);
-	}
+	public $restful = true;
 
 	/**
-	 * Returns a new Cart() object with the wishlist name.
+	 * Shows the main checkout page.
 	 *
 	 * @access   public
-	 * @param    string
-	 * @return   object
+	 * @return   void
 	 */
-	public static function wishlist($wishlist_name = 'wishlist')
+	public function get_index()
 	{
-		// Return the cart object.
+		// Show the page.
 		//
-		return new Cart($wishlist_name);
+		return View::make('cartify::cart.checkout');
 	}
 }

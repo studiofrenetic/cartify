@@ -7,7 +7,7 @@
  * Cartify, a shopping cart bundle for use with the Laravel Framework.
  *
  * @package  Cartify
- * @version  2.0.0
+ * @version  2.0.1
  * @author   Bruno Gaspar <brunofgaspar1@gmail.com>
  * @link     https://github.com/bruno-g/cartify
  */
@@ -64,8 +64,27 @@ class Products
 				'id'      => 'sku_965QRS',
 				'price'   => 29.95,
 				'name'    => 'Shot Glass',
-				'image'   => 'shot_glass.jpg'
+				'image'   => 'shot_glass.jpg',
+				/*
+				'options' => array(
+					'color' => array(
+						'lightblue' => 'Light Blue',
+						'red' => 'Translucid Red'
+					)
+				)
+				*/
 			)
 		);
+	}
+
+	public static function get_options($item_id)
+	{
+		// Get the list of products.
+		//
+		$products = static::get_list();
+
+		// Return the product options.
+		//
+		return array_get($products, $item_id . '.options', array());
 	}
 }
