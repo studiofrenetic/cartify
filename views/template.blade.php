@@ -4,7 +4,7 @@
 		<!-- Site title -->
 		<title>Cartify</title>
 
-		<link href="{{ URL::to_asset('css/bootstrap.css') }}" rel="stylesheet">
+		<link href="{{ URL::to_asset('bundles/cartify/css/bootstrap.css') }}" rel="stylesheet">
 		<style type="text/css">body { padding-top: 60px; }</style>
 	</head>
 	<body>
@@ -56,6 +56,6 @@
 
 		<!-- Scripts -->
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
-		<script src="{{ URL::to_asset('js/bootstrap.js') }}"></script>
+		<script src="{{ URL::to_asset('bundles/cartify/js/bootstrap.js') }}"></script>
 	</body>
 </html>

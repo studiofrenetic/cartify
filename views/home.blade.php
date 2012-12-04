@@ -6,7 +6,7 @@
 <div class="row">
 	<div class="span12 well">
 		<form class="form-horizontal" method="post" action="">
-			<span class="span3 thumbnail"><img src="{{ URL::to_asset('img/products/' . $product['image']) }}" /></span>
+			<span class="span3 thumbnail"><img src="{{ URL::to_asset('bundles/cartify/img/products/' . $product['image']) }}" /></span>
 			<span class="span7">
 				<input type="hidden" name="item_id" id="item_id" value="{{ $product['id']}}" />
 				<div class="page-header">
