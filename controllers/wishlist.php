@@ -57,6 +57,56 @@ class Cartify_Wishlist_Controller extends Controller
 	 */
 	public function post_index()
 	{
+		// If we are updating the quantities.
+		//
+		if (Input::get('update'))
+		{
+			// Initiate an empty array.
+			//
+			$items = array();
+
+			// Get the items to be updated.
+			//
+			foreach(Input::get('items', array()) as $item_id => $item)
+			{
+				$items[] = array(
+					'rowid'   => $item_id,
+					#'qty'     => array_get($item, 'qty', 1),
+					'options' => array_get($item, 'options', array())
+				);
+			}
+
+			// Update the cart contents.
+			//
+			try
+			{
+				Cartify::wishlist()->update($items);
+			}
+			catch (Exception $e)
+			{
+				echo $e->getMessage();
+				die;
+			}
+
+			// Redirect back to the wishlist home.
+			//
+			return Redirect::to('cartify/wishlist')->with('success', 'Your wishlist was updated.');
+		}
+
+		// If we are emptying the wishlist.
+		//
+		elseif (Input::get('empty'))
+		{
+			// Let's make the cart empty!
+			//
+			Cartify::wishlist()->destroy();
+
+			// Redirect back to the cart home.
+			//
+			return Redirect::to('cartify/wishlist')->with('warning', 'Your wishlist was cleared!');
+		}
+
+
 		// Let's make the wishlist empty!
 		//
 		Cartify::wishlist()->destroy();
@@ -64,40 +114,6 @@ class Cartify_Wishlist_Controller extends Controller
 		// Redirect back to the wishlist page.
 		//
 		return Redirect::to('cartify/wishlist')->with('warning', 'Your wishlist was cleared!');
-	}
-
-	/**
-	 * Adds an item to the wishlist.
-	 *
-	 * @access   public
-	 * @param    string
-	 * @return   void
-	 */
-	public function get_add($item_id, $qty = 1)
-	{
-		$products = Products::get_list();
-
-		// Get the product information.
-		//
-		$info = $products[ $item_id ];
-
-		// Add the qty to the product information.
-		//
-		$product = array(
-			'id'      => $info['id'],
-			'qty'     => $qty,
-			'price'   => $info['price'],
-			'name'    => $info['name'],
-			'image'   => $info['image']
-		);
-
-		// Add the item to the wishlist.
-		//
-		Cartify::wishlist()->add($product);
-
-		// Redirect back to the wishlist page.
-		//
-		return Redirect::to('cartify/wishlist')->with('success', 'The product was added to your wishlist!');
 	}
 
 	/**

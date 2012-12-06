@@ -46,10 +46,15 @@ class Cartify
 	 * @param    string
 	 * @return   object
 	 */
-	public static function wishlist($wishlist_name = 'wishlist')
+	public static function wishlist($cart_name = 'wishlist')
 	{
+		// Make sure we have a cart name.
+		//
+		$cart_name = trim($cart_name);
+		$cart_name = (is_null($cart_name) or $cart_name == '' ? 'wishlist' : $cart_name);
+
 		// Return the cart object.
 		//
-		return new Cart($wishlist_name);
+		return new Cart($cart_name);
 	}
 }

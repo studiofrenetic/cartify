@@ -30,6 +30,8 @@ class Products
 		// Declare our static products, this is just for the example !!!
 		//
 		return array(
+			// Product 1
+			//
 			'sku_123ABC' => array(
 				'id'      => 'sku_123ABC',
 				'price'   => 39.95,
@@ -37,22 +39,25 @@ class Products
 				'image'   => 'tshirt.jpg',
 				'options' => array(
 					'Size'  => array(
-						'S' => 'S',
-						'M' => 'M',
-						'L' => 'L'
+						's' => 'S',
+						'm' => 'M',
+						'l' => 'L'
 					),
 					'Color' => array(
-						'Red'    => 'Red',
-						'Blue'   => 'Blue',
-						'Yellow' => 'Yellow',
-						'White'  => 'White'
+						'red'    => 'Red',
+						'blue'   => 'Blue',
+						'yellow' => 'Yellow',
+						'white'  => 'White'
 					),
 					'Style' => array(
-						'Unisex' => 'Unisex',
-						'Womens' => 'Womens'
+						'unisex' => 'Unisex',
+						'womens' => 'Womens'
 					)
 				)
 			),
+
+			// Product 2
+			//
 			'sku_567ZYX' => array(
 				'id'      => 'sku_567ZYX',
 				'price'   => 9.95,
@@ -60,24 +65,19 @@ class Products
 				'image'   => 'coffee_mug.jpg',
 				'options' => array(
 					'Design' => array(
-						'Design 1'=> 'Design 1',
-						'Design XpT0' => 'Design XpT0'
+						'design 1'=> 'Design 1',
+						'design XpT0' => 'Design XpT0'
 					)
 				)
 			),
+
+			// Product 3
+			//
 			'sku_965QRS' => array(
 				'id'      => 'sku_965QRS',
 				'price'   => 29.95,
 				'name'    => 'Shot Glass',
-				'image'   => 'shot_glass.jpg',
-				/*
-				'options' => array(
-					'color' => array(
-						'lightblue' => 'Light Blue',
-						'red' => 'Translucid Red'
-					)
-				)
-				*/
+				'image'   => 'shot_glass.jpg'
 			)
 		);
 	}

@@ -82,11 +82,11 @@ This is useful in cases where you wish to allow people to select from among seve
 ```
 
 ####Important:
-The first four array indexes above (id, qty, price, and name) are required.
-If you omit any of them the data will not be saved to the cart.
-The fifth index (options) is optional.
-It is intended to be used in cases where your product has options associated with it.
-Use an array for options, as shown above.
+	The first four array indexes above (id, qty, price, and name) are required.
+	If you omit any of them the data will not be saved to the cart.
+	The fifth index (options) is optional.
+	It is intended to be used in cases where your product has options associated with it.
+	Use an array for options, as shown above.
 
 **The five reserved indexes are:**
 - **id** - Each product in your store must have a unique identifier. Typically this will be an "sku" or other such identifier.
@@ -172,32 +172,49 @@ To display the cart you will create a view file with code similar to the one sho
 
 
 ## Function Reference
-
+```php
 	Cartify::cart()->insert();
+```
 Permits you to add items to the shopping cart.
 
+```php
 	Cartify::cart()->update();
-Permits you to update items in the shopping cart.
 
+```Permits you to update items in the shopping cart.
+
+```php
 	Cartify::cart()->remove(rowid);
+```
 Permits you to remove an item from the shopping cart.
 
+```php
 	Cartify::cart()->total();
+```
 Displays the total amount in the cart.
 
+```php
 	Cartify::cart()->total_items();
+```
 Displays the total number of items in the cart.
 
+```php
 	Cartify::cart()->contents();
+```
 Returns an array containing everything in the cart.
 
+```php
 	Cartify::cart()->has_options(rowid);
+```
 Returns TRUE (boolean) if a particular row in the cart contains options. This function is designed to be used in a loop with Cartify::cart()->contents(), since you must pass the rowid to this function, as shown in the Displaying the Cart example above.
 
+```php
 	Cartify::cart()->item_options(rowid);
+```
 Returns an array of options for a particular item. This function is designed to be used in a loop with Cartify::cart()->contents(), since you must pass the rowid to this function, as shown in the Displaying the Cart example above.
 
+```php
 	Cartify::cart()->destroy();
+```
 Permits you to destroy the cart. This function will likely be called when you are finished processing the customer's order.
 
 
@@ -205,15 +222,17 @@ Permits you to destroy the cart. This function will likely be called when you ar
 It is now possible to have multiple instances of the cart class.
 
 You just need to pass in the name of the cart like so:
-
+```php
 	Cartify::cart('my_other_cart')->add($item);
+```
 
 It is included an Whishlist method to help you, and you can even create multiple wishlist's aswell, like so:
-
-Cartify::wishlist()->add($item);
-Cartify::wishlist('my_other_wishlist')->add($item);
-
+```php
+	Cartify::wishlist()->add($item);
+	Cartify::wishlist('my_other_wishlist')->add($item);
+```
 
 ## Credits
-CodeIgniter for writing this Library.
-Twitter for the awesome Bootstrap framework.
+
+	CodeIgniter for writing this Library.
+	Twitter for the awesome Bootstrap framework.

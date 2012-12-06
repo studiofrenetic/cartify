@@ -26,7 +26,7 @@ use Cartify\Models\Products;
 /**
  * The cart main page.
  */
-class Cartify_Cart_Home_Controller extends Controller
+class Cartify_Cart_Controller extends Controller
 {
 	/**
 	 * Flag for whether the controller is RESTful.
@@ -66,7 +66,11 @@ class Cartify_Cart_Home_Controller extends Controller
 			$items = array();
 			foreach(Input::get('items') as $item_id => $qty)
 			{
-				$items[] = array('rowid' => $item_id, 'qty'=> $qty);
+				$items[] = array(
+					'rowid' => $item_id,
+					'qty'   => $qty,
+					'options' => array()
+				);
 			}
 
 			// Update the cart contents.
@@ -91,86 +95,6 @@ class Cartify_Cart_Home_Controller extends Controller
 			return Redirect::to('cartify/cart')->with('warning', 'Your shopping cart was cleared!');
 		}
 	}
-
-	/**
-	 * Adds an item to the shopping cart.
-	 *
-	 * @access   public
-	 * @param    string
-	 * @return   void
-	 */
-	/*
-	public function get_add($item_id, $qty = 1)
-	{
-		$products = Products::get_list();
-
-		// Get the product information.
-		//
-		$info = $products[ $item_id ];
-
-		// Add the qty to the product information.
-		//
-		$product = array(
-			'id'      => $info['id'],
-			'qty'     => $qty,
-			'price'   => $info['price'],
-			'name'    => $info['name'],
-			'image'   => $info['image']
-		);
-
-		// Add the item to the wishlist.
-		//
-		Cartify::cart()->add($product);
-
-		// Redirect back to the wishlist page.
-		//
-		return Redirect::to('cartify/cart')->with('success', 'The product was added to your shopping cart!');
-	}
-	*/
-
-	/**
-	 * Adds a product to the shopping cart.
-	 *
-	 * @access   public
-	 * @return   void
-	 */
-	/*
-	public function post_add()
-	{
-		// Get the static list of products.
-		//
-		$products = Products::get_list();
-
-		// Retrieve some data.
-		//
-		$item_id = Input::get('item_id');
-		$qty     = Input::get('qty');
-		$options = Input::get('options', array());
-
-		// Get the product information.
-		//
-		$info = $products[ $item_id ];
-
-		// Add the qty to the product information.
-		//
-		$product = array(
-			'id'      => $info['id'],
-			'qty'     => $qty,
-			'price'   => $info['price'],
-			'name'    => $info['name'],
-			'image'   => $info['image'],
-			'options' => $options
-		);
-
-		// Add the item to the cart.
-		//
-		Cartify::cart()->add($product);
-
-		// Redirect back to the cart page.
-		//
-		return Redirect::to('cartify/cart')->with('success', 'Product was added to the shopping cart!');
-	}
-	*/
 
 	/**
 	 * Removes an item from the shopping cart.

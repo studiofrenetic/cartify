@@ -49,11 +49,12 @@ class Cart
 	 *		underscores
 	 *		colons
 	 *		periods
+	 *		accents
 	 *
 	 * @access   protected
 	 * @var      string
 	 */
-	protected $item_name_rules = '\.\:\-_ a-z0-9';
+	protected $item_name_rules = '^.';
 
 	/**
 	 * Holds the cart name.
@@ -100,7 +101,7 @@ class Cart
 	}
 
 	/**
-	 * Insert items into the cart.
+	 * Inserts items into the cart.
 	 *
 	 * @access   public
 	 * @param    array
@@ -190,9 +191,9 @@ class Cart
 
 		// Single item.
 		//
-		if (isset($items['rowid']) and isset($items['qty']))
+		if ( ! isset($items[0]))
 		{
-			// Try to update the item.
+			// Check if the item was updated.
 			//
 			if ($this->_update($items) === true)
 			{
@@ -208,16 +209,11 @@ class Cart
 			//
 			foreach ($items as $item)
 			{
-				// Validate the item.
+				// Check if the item was updated.
 				//
-				if (is_array($item) and isset($item['rowid']) and isset($item['qty']))
+				if ($this->_update($item) === true)
 				{
-					// Try to update the item.
-					//
-					if ($this->_update($item))
-					{
-						$update_cart = true;
-					}
+					$update_cart = true;
 				}
 			}
 		}
@@ -369,7 +365,7 @@ class Cart
 	 *
 	 * @access   protected
 	 * @param    array
-	 * @return   integer
+	 * @return   string
 	 * @throws   Exception
 	 */
 	protected function _insert($item = array())
@@ -399,40 +395,38 @@ class Cart
 
 		// Prepare the quantity.
 		//
-		$item['qty'] = trim(preg_replace('/([^0-9])/i', '', $item['qty']));
-		$item['qty'] = trim(preg_replace('/(^[0]+)/i', '', $item['qty']));
+		$item['qty'] = trim(preg_replace(array('/([^0-9])/i', '/(^[0]+)/i'), '', $item['qty']));
 
 		// If the quantity is zero or blank there's nothing for us to do.
 		//
-		if ( ! is_numeric($item['qty']) OR $item['qty'] == 0)
+		if ( ! is_numeric($item['qty']) or $item['qty'] == 0)
 		{
-			return false;
+			throw new Exception('Item quantity is required!');
 		}
 
 		// Validate the item id.
 		//
-		if ( ! preg_match("/^[" . $this->item_id_rules . "]+$/i", $item['id']))
+		if ( ! preg_match('/^[' . $this->item_id_rules . ']+$/i', $item['id']))
 		{
-			return false;
+			throw new Exception('Invalid item id.');
 		}
 
 		// Validate the item name.
 		//
-		if ( ! preg_match("/^[" . $this->item_name_rules . "]+$/i", $item['name']))
+		if ( ! preg_match('/^[' . $this->item_name_rules . ']+$/i', $item['name']))
 		{
-			return false;
+			throw new Exception('Invalid item name.');
 		}
 
 		// Prepare the price.
 		//
-		$item['price'] = trim(preg_replace('/([^0-9\.])/i', '', $item['price']));
-		$item['price'] = trim(preg_replace('/(^[0]+)/i', '', $item['price']));
+		$item['price'] = trim(preg_replace(array('/([^0-9\.])/i', '/(^[0]+)/i'), '', $item['price']));
 
 		// Is the price a valid number?
 		//
 		if ( ! is_numeric($item['price']))
 		{
-			return false;
+			throw new Exception('Invalid item price.');
 		}
 
 		// Create a unique identifier.
@@ -476,6 +470,13 @@ class Cart
 	 */
 	protected function _update($item = array())
 	{
+		// Make sure the row id is passed.
+		//
+		if ( ! isset($item['rowid']))
+		{
+			throw new Exception('Item row id is required!');
+		}
+
 		// Check if the item exists in the cart.
 		//
 		if ( ! isset($this->cart_contents[ $this->cart_name ][ $item['rowid'] ]))
@@ -483,52 +484,60 @@ class Cart
 			throw new Exception('Item does not exist!');
 		}
 
-		// Required indexes.
+		// Item row id.
 		//
-		$required_indexes = array('qty', 'rowid');
-
-		// Loop through the required indexes.
-		//
-		foreach ($required_indexes as $index)
-		{
-			// Make sure the array contains this index.
-			//
-			if ( ! isset($item[ $index ]))
-			{
-				throw new Exception('Required index [' . $index . '] is missing.');
-			}
-		}
+		$rowid = $item['rowid'];
 
 		// Prepare the quantity.
 		//
-		$item['qty'] = trim(preg_replace('/([^0-9])/i', '', $item['qty']));
+		$qty = array_get($item, 'qty', 1);
+		$qty = trim(preg_replace(array('/([^0-9])/i', '/(^[0]+)/i'), '', $qty));
+
+		// Unset the qty and the rowid.
+		//
+		unset($item['rowid']);
+		unset($item['qty']);
 
 		// Is the quantity a number ?
 		//
-		if ( ! is_numeric($item['qty']))
+		if ( ! is_numeric($qty))
 		{
 			throw new Exception('Quantity needs to be numeric!');
 		}
 
-		// If the new quantaty is the same the already in the cart, there is nothing to update.
+		// Check if we have more data, like options or custom data.
 		//
-		if ($this->cart_contents[ $this->cart_name ][ $item['rowid'] ]['qty'] == $item['qty'])
+		if ( ! empty($item))
+		{
+			// Loop through the item data.
+			//
+			foreach ($item as $key => $val)
+			{
+				// Update the item data.
+				//
+				$this->cart_contents[ $this->cart_name ][ $rowid ][ $key ] = $val;
+			}
+		}
+
+		// If the new quantaty is the same the already in the cart, there is nothing more to update.
+		//
+		if ($this->cart_contents[ $this->cart_name ][ $rowid ]['qty'] == $qty)
 		{
 			return true;
 		}
 
 		// If the quantity is zero, we will be removing the item from the cart.
 		//
-		if ($item['qty'] == 0)
+		if ($qty == 0)
 		{
-			unset($this->cart_contents[ $this->cart_name ][ $item['rowid'] ]);
+			unset($this->cart_contents[ $this->cart_name ][ $rowid ]);
 		}
 
 		// Quantity is greater than zero, let's update the item cart.
 		//
 		else
 		{
-			$this->cart_contents[ $this->cart_name ][ $item['rowid'] ]['qty'] = $item['qty'];
+			$this->cart_contents[ $this->cart_name ][ $rowid ]['qty'] = $qty;
 		}
 
 		// Cart updated.
