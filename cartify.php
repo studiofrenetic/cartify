@@ -25,7 +25,7 @@ class CartifyException extends \Exception {}
 class Cartify
 {
 	/**
-	 * Return a new Cart() object.
+	 * Return a new Cartify_Cart() object.
 	 *
 	 * @access   public
 	 * @param    string
@@ -39,7 +39,7 @@ class Cartify
 	}
 
 	/**
-	 * Returns a new Cart() object with the wishlist name.
+	 * Returns a new Cartify_Cart() object with the wishlist name.
 	 *
 	 * @access   public
 	 * @param    string

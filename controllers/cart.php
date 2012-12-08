@@ -48,8 +48,6 @@ class Cartify_Cart_Controller extends Controller
 		//
 		$cart_contents = Cartify::cart()->contents();
 
-
-
 		// Show the page.
 		//
 		return View::make('cartify::cart.index')->with('cart_contents', $cart_contents);
@@ -85,13 +83,26 @@ class Cartify_Cart_Controller extends Controller
 				//
 				Cartify::cart()->update($items);
 			}
-			catch (Cartify\CartException $e)
+			catch (Cartify\CartInvalidItemRowIdException $e)
 			{
-				echo 'an error occurred while updating your shopping cart';
-				die;
+				// Redirect back to the shopping cart page.
+				//
+				return Redirect::to('cartify/cart')->with('error', 'Invalid Item Row ID!');
+			}
+			catch (Cartify\CartItemNotFoundException $e)
+			{
+				// Redirect back to the shopping cart page.
+				//
+				return Redirect::to('cartify/cart')->with('error', 'Item was not found in your shopping cart!');
+			}
+			catch (Cartify\CartInvalidItemQuantityException $e)
+			{
+				// Redirect back to the shopping cart page.
+				//
+				return Redirect::to('cartify/cart')->with('error', 'Invalid item quantity!');
 			}
 
-			// Redirect back to the cart home.
+			// Redirect back to the shopping cart page.
 			//
 			return Redirect::to('cartify/cart')->with('success', 'Your shopping cart was updated.');
 		}
@@ -100,19 +111,11 @@ class Cartify_Cart_Controller extends Controller
 		//
 		elseif (Input::get('empty'))
 		{
-			try
-			{
-				// Let's make the cart empty!
-				//
-				Cartify::cart()->destroy();
-			}
-			catch (CartifyException $e)
-			{
-				echo 'error occurred';
-				die;
-			}
+			// Let's clear the shopping cart!
+			//
+			Cartify::cart()->destroy();
 
-			// Redirect back to the cart home.
+			// Redirect back to the shopping cart page.
 			//
 			return Redirect::to('cartify/cart')->with('success', 'Your shopping cart was cleared!');
 		}
@@ -146,7 +149,7 @@ class Cartify_Cart_Controller extends Controller
 			return Redirect::to('cartify/cart')->with('error', 'Item was not found in your shopping cart!');
 		}
 
-		// Redirect back to the cart page.
+		// Redirect back to the shopping cart page.
 		//
 		return Redirect::to('cartify/cart')->with('success', 'The item was removed from the shopping cart.');
 	}

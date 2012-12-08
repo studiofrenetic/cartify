@@ -9,7 +9,7 @@
 	* Updated the examples.
 	* Added the public folder, which contains the needed assets for the examples.
 	* Updated to Twitter Bootstrap 2.2.1
-	* Item names can now how have accents.
+	* Item names can now have accents.
 
 **Version: 2.0.0**
 

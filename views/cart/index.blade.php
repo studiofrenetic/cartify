@@ -15,7 +15,7 @@
 		</thead>
 		<tbody>
 			@forelse ($cart_contents as $item)
-			<!-- Get the product options, you should get product related options on your controller ! -->
+			<!-- Get the product options, you should get product related options on your controller! -->
 			<?php $product_options = Cartify\Models\Products::get_options($item['id']); ?>
 
 			<tr>
@@ -69,7 +69,7 @@
 	</table>
 	<div class="pull-right">
 		<a href="{{ URL::to('cartify') }}" class="btn">Continue Shopping</a>
-		<a href="{{ URL::to('cartify/cart/checkout') }}" class="btn btn-info">Checkout</a>
+		<a href="#" class="btn btn-info">Checkout</a>
 	</div>
 
 	<button type="submit" id="update" name="update" value="1" class="btn btn-success">Update</button>

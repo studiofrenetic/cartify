@@ -75,28 +75,9 @@ class Cartify_Home_Controller extends Controller
 		//
 		$info = $products[ $item_id ];
 
-		// Populate a proper product array.
+		// Populate a proper item array.
 		//
-		$product = array(
-			array(
-				'id'      => $info['id'],
-				'qty'     => $qty,
-				'price'   => $info['price'],
-				'name'    => $info['name'],
-				'image'   => $info['image'],
-				'options' => $options
-			),
-			array(
-				'idx'      => 'xptop',
-				'qty'     => $qty,
-				'price'   => $info['price'],
-				'name'    => $info['name'],
-				'image'   => $info['image'],
-				'options' => $options
-			)
-		);
-
-		$product = array(
+		$item = array(
 			'id'      => $info['id'],
 			'qty'     => $qty,
 			'price'   => $info['price'],
@@ -105,44 +86,162 @@ class Cartify_Home_Controller extends Controller
 			'options' => $options
 		);
 
-		// Do we want to add the product to the wishlist?
+		// Do we want to add the item to the wishlist?
 		//
 		if ($action === 'add_to_wishlist')
 		{
-			// Add the item to the wishlist.
-			//
 			try
 			{
-				Cartify::wishlist()->insert($product);
+				// Add the item to the wishlist.
+				//
+				Cartify::wishlist()->insert($item);
 			}
-			catch (Exception $e)
+/*
+			// Check if we have invalid data passed.
+			//
+			catch (Cartify\CartInvalidDataException $e)
 			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid data passed.');
+			}
+
+			// Check if we a required index is missing.
+			//
+			catch (Cartify\CartRequiredIndexException $e)
+			{
+				// Redirect back to the home page.
+				//
 				return Redirect::to('cartify')->with('error', $e->getMessage());
+			}
+
+			// Check if the quantity is invalid.
+			//
+			catch (Cartify\CartInvalidItemQuantityException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid item quantity.'');
+			}
+
+			// Check if the item row id is invalid.
+			//
+			catch (Cartify\CartInvalidItemRowIdException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid item row id.');
+			}
+
+			// Check if the item name is invalid.
+			//
+			catch (Cartify\InvalidItemNameException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid item name.');
+			}
+
+			// Check if the item price is invalid.
+			//
+			catch (Cartify\CartInvalidItemPriceException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid item price.');
+			}
+*/
+			// Maybe we want to catch all the errors? Sure.
+			//
+			catch (Cartify\CartException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'An unexpected error occurred!');
 			}
 
 			// Redirect to the wishlist page.
 			//
-			return Redirect::to('cartify/wishlist')->with('success', 'The product was added to your wishlist!');
+			return Redirect::to('cartify/wishlist')->with('success', 'The item was added to your wishlist!');
 		}
 
-		// Do we want to add the product to the shopping cart?
+		// Do we want to add the item to the shopping cart?
 		//
 		elseif ($action === 'add_to_cart')
 		{
-			// Add the item to the shopping cart.
-			//
 			try
 			{
-				Cartify::cart()->insert($product);
+				// Add the item to the shopping cart.
+				//
+				Cartify::cart()->insert($item);
 			}
-			catch (Exception $e)
+/*
+			// Check if we have invalid data passed.
+			//
+			catch (Cartify\CartInvalidDataException $e)
 			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid data passed.');
+			}
+
+			// Check if we a required index is missing.
+			//
+			catch (Cartify\CartRequiredIndexException $e)
+			{
+				// Redirect back to the home page.
+				//
 				return Redirect::to('cartify')->with('error', $e->getMessage());
+			}
+
+			// Check if the quantity is invalid.
+			//
+			catch (Cartify\CartInvalidItemQuantityException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid item quantity.'');
+			}
+
+			// Check if the item row id is invalid.
+			//
+			catch (Cartify\CartInvalidItemRowIdException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid item row id.');
+			}
+
+			// Check if the item name is invalid.
+			//
+			catch (Cartify\InvalidItemNameException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid item name.');
+			}
+
+			// Check if the item price is invalid.
+			//
+			catch (Cartify\CartInvalidItemPriceException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'Invalid item price.');
+			}
+*/
+			// Maybe we want to catch all the errors? Sure.
+			//
+			catch (Cartify\CartException $e)
+			{
+				// Redirect back to the home page.
+				//
+				return Redirect::to('cartify')->with('error', 'An unexpected error occurred!');
 			}
 
 			// Redirect to the cart page.
 			//
-			return Redirect::to('cartify/cart')->with('success', 'The product was added to your shopping cart!');
+			return Redirect::to('cartify/cart')->with('success', 'The item was added to your shopping cart!');
 		}
 
 		// Invalid action, redirect to the home page.

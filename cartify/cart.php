@@ -25,6 +25,8 @@ use Laravel\Session;
  */
 class CartException extends CartifyException {}
 class CartItemNotFoundException extends CartException {}
+class CartRequiredIndexException extends CartException {}
+class CartInvalidDataException extends CartException {}
 class CartInvalidItemRowIdException extends CartException {}
 class CartInvalidItemNameException extends CartException {}
 class CartInvalidItemQuantityException extends CartException {}
@@ -129,7 +131,7 @@ class Cartify_Cart
 
 		// Check if this item exists.
 		//
-		if ( ! $item = array_get($this->cart_contents[ $this->cart_name], $rowid))
+		if ( ! $item = array_get($this->cart_contents[ $this->cart_name ], $rowid))
 		{
 			throw new CartItemNotFoundException;
 		}
@@ -204,7 +206,7 @@ class Cartify_Cart
 
 		// Something went wrong...
 		//
-		return false;
+		throw new CartException;
 	}
 
 	/**
@@ -428,7 +430,7 @@ class Cartify_Cart
 			//
 			if ( ! isset($item[ $index ]))
 			{
-				throw new Exception('Required index [' . $index . '] is missing.');
+				throw new CartRequiredIndexException('Required index [' . $index . '] is missing.');
 			}
 		}
 
@@ -529,8 +531,7 @@ class Cartify_Cart
 
 		// Prepare the quantity.
 		//
-		$qty = array_get($item, 'qty', 1);
-		$qty = trim(preg_replace('/([^0-9])/i', '', $qty));
+		$qty = trim(preg_replace('/([^0-9])/i', '', array_get($item, 'qty', 1)));
 
 		// Unset the qty and the rowid.
 		//
@@ -569,6 +570,8 @@ class Cartify_Cart
 		//
 		if ($qty == 0)
 		{
+			// Remove the item from the cart.
+			//
 			unset($this->cart_contents[ $this->cart_name ][ $rowid ]);
 		}
 
@@ -576,6 +579,12 @@ class Cartify_Cart
 		//
 		else
 		{
+			// Make sure we remove the zeros before the numbers like: 01, 02, etc..
+			//
+			$qty = trim(preg_replace('/(^[0]+)/i', '', $qty));
+
+			// Update the item quantity.
+			//
 			$this->cart_contents[ $this->cart_name ][ $rowid ]['qty'] = $qty;
 		}
 
