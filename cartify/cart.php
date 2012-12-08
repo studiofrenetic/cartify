@@ -12,19 +12,29 @@
  * @link     https://github.com/bruno-g/cartify
  */
 
-namespace Cartify\Libraries;
+namespace Cartify;
 
 /**
  * Libraries we can use.
  */
-use Exception;
 use Laravel\Config;
 use Laravel\Session;
 
 /**
+ * Cartify Cart Exceptions.
+ */
+class CartException extends CartifyException {}
+class CartItemNotFoundException extends CartException {}
+class CartInvalidItemRowIdException extends CartException {}
+class CartInvalidItemNameException extends CartException {}
+class CartInvalidItemQuantityException extends CartException {}
+class CartInvalidItemPriceException extends CartException {}
+
+
+/**
  * Cart class.
  */
-class Cart
+class Cartify_Cart
 {
 	/**
 	 * Regular expression to validate item ID's.
@@ -101,6 +111,35 @@ class Cart
 	}
 
 	/**
+	 * Returns an item information.
+	 *
+	 * @access   public
+	 * @param    string
+	 * @return   array
+	 * @throws   Exception
+	 */
+	public function item($rowid = null)
+	{
+		// Check if we have a valid rowid.
+		//
+		if (is_null($rowid))
+		{
+			throw new CartInvalidItemRowIdException;
+		}
+
+		// Check if this item exists.
+		//
+		if ( ! $item = array_get($this->cart_contents[ $this->cart_name], $rowid))
+		{
+			throw new CartItemNotFoundException;
+		}
+
+		// Return all the item information.
+		//
+		return $item;
+	}
+
+	/**
 	 * Inserts items into the cart.
 	 *
 	 * @access   public
@@ -114,7 +153,7 @@ class Cart
 		//
 		if ( ! is_array($items) or count($items) == 0)
 		{
-			throw new Exception('Invalid data passed, an array is expected!');
+			throw new CartInvalidDataException;
 		}
 
 		// We only update the cart when we insert data into it.
@@ -182,7 +221,7 @@ class Cart
 		//
 		if ( ! is_array($items) or count($items) == 0)
 		{
-			throw new Exception('Invalid data passed, an array is expected!');
+			throw new CartInvalidDataException;
 		}
 
 		// We only update the cart when we insert data into it.
@@ -250,7 +289,7 @@ class Cart
 		//
 		if (is_null($rowid))
 		{
-			throw new Exception('You need to pass a row id.');
+			throw new CartInvalidItemRowIdException;
 		}
 
 		// Try to remove the item.
@@ -374,7 +413,7 @@ class Cart
 		//
 		if ( ! is_array($item) or count($item) == 0)
 		{
-			throw new Exception('Invalid data passed, an array is expected!');
+			throw new CartInvalidDataException;
 		}
 
 		// Required indexes.
@@ -401,21 +440,21 @@ class Cart
 		//
 		if ( ! is_numeric($item['qty']) or $item['qty'] == 0)
 		{
-			throw new Exception('Item quantity is required!');
+			throw new CartInvalidItemQuantityException;
 		}
 
 		// Validate the item id.
 		//
 		if ( ! preg_match('/^[' . $this->item_id_rules . ']+$/i', $item['id']))
 		{
-			throw new Exception('Invalid item id.');
+			throw new CartInvalidItemRowIdException;
 		}
 
 		// Validate the item name.
 		//
 		if ( ! preg_match('/^[' . $this->item_name_rules . ']+$/i', $item['name']))
 		{
-			throw new Exception('Invalid item name.');
+			throw new InvalidItemNameException;
 		}
 
 		// Prepare the price.
@@ -426,7 +465,7 @@ class Cart
 		//
 		if ( ! is_numeric($item['price']))
 		{
-			throw new Exception('Invalid item price.');
+			throw new CartInvalidItemPriceException;
 		}
 
 		// Create a unique identifier.
@@ -474,14 +513,14 @@ class Cart
 		//
 		if ( ! isset($item['rowid']))
 		{
-			throw new Exception('Item row id is required!');
+			throw new CartInvalidItemRowIdException;
 		}
 
 		// Check if the item exists in the cart.
 		//
 		if ( ! isset($this->cart_contents[ $this->cart_name ][ $item['rowid'] ]))
 		{
-			throw new Exception('Item does not exist!');
+			throw new CartItemNotFoundException;
 		}
 
 		// Item row id.
@@ -491,7 +530,7 @@ class Cart
 		// Prepare the quantity.
 		//
 		$qty = array_get($item, 'qty', 1);
-		$qty = trim(preg_replace(array('/([^0-9])/i', '/(^[0]+)/i'), '', $qty));
+		$qty = trim(preg_replace('/([^0-9])/i', '', $qty));
 
 		// Unset the qty and the rowid.
 		//
@@ -502,7 +541,7 @@ class Cart
 		//
 		if ( ! is_numeric($qty))
 		{
-			throw new Exception('Quantity needs to be numeric!');
+			throw new CartInvalidItemQuantityException;
 		}
 
 		// Check if we have more data, like options or custom data.

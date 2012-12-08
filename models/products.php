@@ -66,7 +66,7 @@ class Products
 				'options' => array(
 					'Design' => array(
 						'design 1'=> 'Design 1',
-						'design XpT0' => 'Design XpT0'
+						'design xpt0' => 'Design XpT0'
 					)
 				)
 			),

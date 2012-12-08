@@ -57,5 +57,6 @@
 		<!-- Scripts -->
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
 		<script src="{{ URL::to_asset('bundles/cartify/js/bootstrap.js') }}"></script>
+		@yield('scripts')
 	</body>
 </html>

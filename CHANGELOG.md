@@ -1,5 +1,6 @@
 **Version: 2.1.0**
 
+	* Added a new item() method to the cart class.
 	* Now almost every method from the cart library throws an Exception.
 	* Renamed the cart add() method to insert()
 	* Added an helpers file.
@@ -7,6 +8,7 @@
 	* Code improvements.
 	* Updated the examples.
 	* Added the public folder, which contains the needed assets for the examples.
+	* Updated to Twitter Bootstrap 2.2.1
 	* Item names can now how have accents.
 
 **Version: 2.0.0**

@@ -23,6 +23,7 @@
  */
 use Cartify\Models\Products;
 
+
 /**
  * The wishlist page.
  */
@@ -123,14 +124,64 @@ class Cartify_Wishlist_Controller extends Controller
 	 * @param    string
 	 * @return   void
 	 */
-	public function get_remove($item_id = null)
+	public function get_remove($rowid = null)
 	{
-		// Remove the item from the wishlist.
-		//
-		Cartify::wishlist()->remove($item_id);
+		try
+		{
+			// Remove the item from the wishlist.
+			//
+			Cartify::wishlist()->remove($rowid);
+		}
+		catch (Cartify\ItemNotFoundException $e)
+		{
+			// Redirect back to the wishlist page.
+			//
+			return Redirect::to('cartify/wishlist')->with('error', 'Item was not found in your wishlist!');
+		}
 
 		// Redirect back to the wishlist page.
 		//
-		return Redirect::to('cartify/wishlist')->with('warning', 'The item was removed from the wishlist.');
+		return Redirect::to('cartify/wishlist')->with('success', 'The item was removed from the wishlist.');
+	}
+
+	/**
+	 * Adds an item from the wishlist to the shopping cart.
+	 *
+	 * @access   public
+	 * @param    string
+	 * @return   Redirect
+	 */
+	public function get_add_to_cart($rowid = null)
+	{
+		try
+		{
+			// Get the item information from the wishlist cart.
+			//
+			$item = Cartify::wishlist()->item($rowid);
+
+			// Unset unnecessary data.
+			//
+			unset($item['subtotal']);
+
+			// Add the item to the shopping cart.
+			//
+			Cartify::cart()->insert($item);
+		}
+		catch (Cartify\Libraries\InvalidItemIdException $e)
+		{
+			// Redirect back to the wishlist page.
+			//
+			return Redirect::to('cartify/wishlist')->with('error', 'Invalid Item Row ID!');
+		}
+		catch (Cartify\Libraries\ItemNotFoundException $e)
+		{
+			// Redirect back to the wishlist page.
+			//
+			return Redirect::to('cartify/wishlist')->with('error', 'Item was not found in your wishlist!');
+		}
+
+		// Redirect to the shopping cart page.
+		//
+		return Redirect::to('cartify/cart')->with('success', 'The product was added to your shopping cart!');
 	}
 }

@@ -18,9 +18,7 @@
  * --------------------------------------------------------------------------
  */
 Autoloader::namespaces(array(
-	'Cartify\\Libraries' => __DIR__ . DS . 'libraries',
-	'Cartify\\Models'    => __DIR__ . DS . 'models',
-	'Cartify'            => __DIR__ . DS
+	'Cartify' => __DIR__ . DS
 ));
 
 /*
@@ -29,6 +27,7 @@ Autoloader::namespaces(array(
  * --------------------------------------------------------------------------
  */
 Autoloader::alias('Cartify\\Cartify', 'Cartify');
+Autoloader::alias('Cartify\\CartifyException', 'CartifyException');
 
 /*
  * --------------------------------------------------------------------------

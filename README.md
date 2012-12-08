@@ -173,14 +173,19 @@ To display the cart you will create a view file with code similar to the one sho
 
 ## Function Reference
 ```php
+	Cartify::cart()->item(rowid)
+```
+Returns all the information about an item from the shopping cart.
+
+```php
 	Cartify::cart()->insert();
 ```
 Permits you to add items to the shopping cart.
 
 ```php
 	Cartify::cart()->update();
-
-```Permits you to update items in the shopping cart.
+```
+Permits you to update items in the shopping cart.
 
 ```php
 	Cartify::cart()->remove(rowid);

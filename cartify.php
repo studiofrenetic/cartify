@@ -15,10 +15,9 @@
 namespace Cartify;
 
 /**
- * Libraries we can use.
+ * Cartify Exception.
  */
-use Cartify\Libraries\Cart;
-use Cartify\Libraries\Whishlist;
+class CartifyException extends \Exception {}
 
 /**
  * Cartify class.
@@ -36,7 +35,7 @@ class Cartify
 	{
 		// Return the cart object.
 		//
-		return new Cart($cart_name);
+		return new Cartify_Cart($cart_name);
 	}
 
 	/**
@@ -55,6 +54,6 @@ class Cartify
 
 		// Return the cart object.
 		//
-		return new Cart($cart_name);
+		return new Cartify_Cart($cart_name);
 	}
 }

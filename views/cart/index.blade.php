@@ -14,22 +14,30 @@
 			</tr>
 		</thead>
 		<tbody>
-			@forelse (Cartify::cart()->contents() as $item)
+			@forelse ($cart_contents as $item)
+			<!-- Get the product options, you should get product related options on your controller ! -->
+			<?php $product_options = Cartify\Models\Products::get_options($item['id']); ?>
+
 			<tr>
 				<td class="align-center">
 					<span class="span1 thumbnail"><img src="{{ URL::to_asset('bundles/cartify/img/products/' . $item['image']) }}" /></span>
 				</td>
 				<td>
 					<strong>{{ $item['name'] }}</strong>
+
 					<span class="pull-right">
 						<a href="{{ URL::to('cartify/cart/remove/' . $item['rowid']) }}" rel="tooltip" title="Remove the product" class="btn btn-mini btn-danger"><i class="icon icon-white icon-remove"></i></a>
 					</span>
+
+					<!-- Check if this cart item has options. -->
 					@if (Cartify::cart()->has_options($item['rowid']))
-						<ul>
-						@foreach (Cartify::cart()->item_options($item['rowid']) as $option_name => $option_value)
-							<li><small>{{ $option_name }}: {{ $option_value }}</small></li>
+					<small>
+						<ul class="unstyled">
+						@foreach ($item['options'] as $option_name => $option_value)
+							<li>- <small>{{ $option_name }}: {{ array_get($product_options, $option_name . '.' . $option_value) }}</small></li>
 						@endforeach
 						</ul>
+					</small>
 					@endif
 				</td>
 				<td><input type="text" class="span1" value="{{ $item['qty'] }}" name="items[{{ $item['rowid'] }}]" /></td>

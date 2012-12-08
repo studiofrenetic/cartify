@@ -44,9 +44,15 @@ class Cartify_Cart_Controller extends Controller
 	 */
 	public function get_index()
 	{
+		// Get the cart contents.
+		//
+		$cart_contents = Cartify::cart()->contents();
+
+
+
 		// Show the page.
 		//
-		return View::make('cartify::cart.index');
+		return View::make('cartify::cart.index')->with('cart_contents', $cart_contents);
 	}
 
 	/**
@@ -61,21 +67,29 @@ class Cartify_Cart_Controller extends Controller
 		//
 		if (Input::get('update'))
 		{
-			// Get the items to be updated.
-			//
-			$items = array();
-			foreach(Input::get('items') as $item_id => $qty)
+			try
 			{
-				$items[] = array(
-					'rowid' => $item_id,
-					'qty'   => $qty,
-					'options' => array()
-				);
-			}
+				// Get the items to be updated.
+				//
+				$items = array();
+				foreach(Input::get('items') as $item_id => $qty)
+				{
+					$items[] = array(
+						'rowid' => $item_id,
+						'qty'   => $qty,
+						#'options' => array()
+					);
+				}
 
-			// Update the cart contents.
-			//
-			Cartify::cart()->update($items);
+				// Update the cart contents.
+				//
+				Cartify::cart()->update($items);
+			}
+			catch (Cartify\CartException $e)
+			{
+				echo 'an error occurred while updating your shopping cart';
+				die;
+			}
 
 			// Redirect back to the cart home.
 			//
@@ -86,13 +100,21 @@ class Cartify_Cart_Controller extends Controller
 		//
 		elseif (Input::get('empty'))
 		{
-			// Let's make the cart empty!
-			//
-			Cartify::cart()->destroy();
+			try
+			{
+				// Let's make the cart empty!
+				//
+				Cartify::cart()->destroy();
+			}
+			catch (CartifyException $e)
+			{
+				echo 'error occurred';
+				die;
+			}
 
 			// Redirect back to the cart home.
 			//
-			return Redirect::to('cartify/cart')->with('warning', 'Your shopping cart was cleared!');
+			return Redirect::to('cartify/cart')->with('success', 'Your shopping cart was cleared!');
 		}
 	}
 
@@ -105,12 +127,27 @@ class Cartify_Cart_Controller extends Controller
 	 */
 	public function get_remove($item_id = null)
 	{
-		// Remove the item from the cart.
-		//
-		Cartify::cart()->remove($item_id);
+		try
+		{
+			// Remove the item from the cart.
+			//
+			Cartify::cart()->remove($item_id);
+		}
+		catch (Cartify\CartInvalidItemRowIdException $e)
+		{
+			// Redirect back to the shopping cart page.
+			//
+			return Redirect::to('cartify/cart')->with('error', 'Invalid Item Row ID!');
+		}
+		catch (Cartify\CartItemNotFoundException $e)
+		{
+			// Redirect back to the shopping cart page.
+			//
+			return Redirect::to('cartify/cart')->with('error', 'Item was not found in your shopping cart!');
+		}
 
 		// Redirect back to the cart page.
 		//
-		return Redirect::to('cartify/cart')->with('warning', 'The item was removed from the shopping cart.');
+		return Redirect::to('cartify/cart')->with('success', 'The item was removed from the shopping cart.');
 	}
 }
