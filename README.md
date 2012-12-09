@@ -243,8 +243,6 @@ It is included an Whishlist method to help you, and you can even create multiple
 
 Some methods on the Cart library throws Exceptions, bellow you have a list of all the Exceptions that are thrown.
 
-An extended example on how to use the Exceptions are in the controllers/home.php controller.
-
 	Cartify\CartException
 
 This Exception is Thrown when an unexpected error occures.
@@ -277,9 +275,11 @@ This Exception is Thrown when a required index
 
 .
 
+	An extended example on how to use the Exceptions are in the controllers/home.php controller.
+
 
 
 ## Credits
 
-	CodeIgniter for writing this Library.
+	CodeIgniter for writing the Cart Library.
 	Twitter for the awesome Bootstrap framework.

@@ -93,7 +93,7 @@ class Cartify_Cart
 	{
 		// Store the cart name.
 		//
-		$this->cart_name = (is_null($cart_name) ? Config::get('cartify::cart.session_name') : $cart_name);
+		$this->cart_name = (is_null($cart_name) ? Config::get('cartify::cart.cart_name') : $cart_name);
 
 		// Check if we have the Cart contents on the session.
 		//
