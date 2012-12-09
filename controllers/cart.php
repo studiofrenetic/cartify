@@ -61,7 +61,7 @@ class Cartify_Cart_Controller extends Controller
 	 */
 	public function post_index()
 	{
-		// If we are updating the quantities.
+		// If we are updating the items information.
 		//
 		if (Input::get('update'))
 		{
@@ -70,12 +70,11 @@ class Cartify_Cart_Controller extends Controller
 				// Get the items to be updated.
 				//
 				$items = array();
-				foreach(Input::get('items') as $item_id => $qty)
+				foreach(Input::get('items') as $rowid => $qty)
 				{
 					$items[] = array(
-						'rowid' => $item_id,
+						'rowid' => $rowid,
 						'qty'   => $qty,
-						#'options' => array()
 					);
 				}
 
@@ -83,18 +82,27 @@ class Cartify_Cart_Controller extends Controller
 				//
 				Cartify::cart()->update($items);
 			}
+
+			// Is the Item Row ID valid?
+			//
 			catch (Cartify\CartInvalidItemRowIdException $e)
 			{
 				// Redirect back to the shopping cart page.
 				//
 				return Redirect::to('cartify/cart')->with('error', 'Invalid Item Row ID!');
 			}
+
+			// Does this item exists on the shopping cart?
+			//
 			catch (Cartify\CartItemNotFoundException $e)
 			{
 				// Redirect back to the shopping cart page.
 				//
 				return Redirect::to('cartify/cart')->with('error', 'Item was not found in your shopping cart!');
 			}
+
+			// Is the item quantity valid?
+			//
 			catch (Cartify\CartInvalidItemQuantityException $e)
 			{
 				// Redirect back to the shopping cart page.
@@ -128,6 +136,7 @@ class Cartify_Cart_Controller extends Controller
 	 * @param    string
 	 * @return   void
 	 */
+	# DONE !
 	public function get_remove($item_id = null)
 	{
 		try
@@ -136,17 +145,32 @@ class Cartify_Cart_Controller extends Controller
 			//
 			Cartify::cart()->remove($item_id);
 		}
+
+		// Is the Item Row ID valid?
+		//
 		catch (Cartify\CartInvalidItemRowIdException $e)
 		{
 			// Redirect back to the shopping cart page.
 			//
 			return Redirect::to('cartify/cart')->with('error', 'Invalid Item Row ID!');
 		}
+
+		// Does this item exists on the shopping cart?
+		//
 		catch (Cartify\CartItemNotFoundException $e)
 		{
 			// Redirect back to the shopping cart page.
 			//
 			return Redirect::to('cartify/cart')->with('error', 'Item was not found in your shopping cart!');
+		}
+
+		// Other error.
+		//
+		catch (Cartify\CartException $e)
+		{
+			// Redirect back to the home page.
+			//
+			return Redirect::to('cartify/cart')->with('error', 'An unexpected error occurred!');
 		}
 
 		// Redirect back to the shopping cart page.

@@ -32,7 +32,6 @@ class CartInvalidItemNameException extends CartException {}
 class CartInvalidItemQuantityException extends CartException {}
 class CartInvalidItemPriceException extends CartException {}
 
-
 /**
  * Cart class.
  */
@@ -204,7 +203,7 @@ class Cartify_Cart
 			return (isset($rowid) ? $rowid : true);
 		}
 
-		// Something went wrong...
+		// Something went wrong.
 		//
 		throw new CartException;
 	}
@@ -272,9 +271,9 @@ class Cartify_Cart
 			return true;
 		}
 
-		// Something went wrong...
+		// Something went wrong.
 		//
-		return false;
+		throw new CartException;
 	}
 
 	/**
@@ -305,7 +304,7 @@ class Cartify_Cart
 
 		// Something went wrong.
 		//
-		return false;
+		throw new CartException;
 	}
 
 	/**
@@ -588,7 +587,7 @@ class Cartify_Cart
 			$this->cart_contents[ $this->cart_name ][ $rowid ]['qty'] = $qty;
 		}
 
-		// Cart updated.
+		// Cart updated with success.
 		//
 		return true;
 	}
@@ -641,7 +640,7 @@ class Cartify_Cart
 		//
 		if (count($this->cart_contents[ $this->cart_name ]) <= 2)
 		{
-			// If so we delete it from the session
+			// If so we delete it from the session.
 			//
 			$this->destroy();
 
