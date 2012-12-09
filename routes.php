@@ -18,4 +18,6 @@
 #############################################################
 
 
+Route::any('cartify/view/(:any)', 'cartify::view@index');
+
 Route::Controller(Controller::detect('cartify'));

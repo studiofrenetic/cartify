@@ -4,7 +4,8 @@
 		<!-- Site title -->
 		<title>Cartify</title>
 
-		<link href="{{ URL::to_asset('bundles/cartify/css/bootstrap.css') }}" rel="stylesheet">
+		<link href="{{ URL::to_asset('bundles/cartify/css/bootstrap.min.css') }}" rel="stylesheet">
+		<link href="{{ URL::to_asset('bundles/cartify/css/style.css') }}" rel="stylesheet">
 		<style type="text/css">body { padding-top: 60px; }</style>
 	</head>
 	<body>

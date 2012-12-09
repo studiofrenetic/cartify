@@ -1,5 +1,6 @@
 @layout('cartify::template')
 
+<!-- Page Content -->
 @section('content')
 	<h3>Wishlist Contents</h3>
 	<table class="table table-hover table-striped table-bordered">

@@ -21,10 +21,16 @@ namespace Cartify\Models;
 
 
 /**
- *
+ * Products, static model.
  */
 class Products
 {
+	/**
+	 * Returns a list of all products.
+	 *
+	 * @access   public
+	 * @return   array
+	 */
 	public static function all()
 	{
 		// Declare our static products, this is just for the example !!!
@@ -82,6 +88,13 @@ class Products
 		);
 	}
 
+	/**
+	 * Returns the options of a product.
+	 *
+	 * @access   public
+	 * @param    string
+	 * @return   array
+	 */
 	public static function get_options($item_id)
 	{
 		// Get the list of products.
@@ -91,5 +104,37 @@ class Products
 		// Return the product options.
 		//
 		return array_get($products, $item_id . '.options', array());
+	}
+
+	/**
+	 * Returns the information about a product.
+	 *
+	 * @access   public
+	 * @param    string
+	 * @return   mixed
+	 */
+	public static function find($product_slug = null)
+	{
+		// Get the list of products.
+		//
+		$products = static::all();
+
+		// Loop through the products.
+		//
+		foreach ($products as $product)
+		{
+			// Check if this the product we are looking for.
+			//
+			if (\Str::slug($product['name']) === $product_slug)
+			{
+				// Return the product information.
+				//
+				return $product;
+			}
+		}
+
+		// Product was not found.
+		//
+		return false;
 	}
 }
