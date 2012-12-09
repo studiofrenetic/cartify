@@ -58,45 +58,9 @@ class Cartify_Wishlist_Controller extends Controller
 	 */
 	public function post_index()
 	{
-		// If we are updating the quantities.
-		//
-		if (Input::get('update'))
-		{
-			// Initiate an empty array.
-			//
-			$items = array();
-
-			// Get the items to be updated.
-			//
-			foreach(Input::get('items', array()) as $item_id => $item)
-			{
-				$items[] = array(
-					'rowid'   => $item_id,
-					#'qty'     => array_get($item, 'qty', 1),
-					'options' => array_get($item, 'options', array())
-				);
-			}
-
-			// Update the cart contents.
-			//
-			try
-			{
-				Cartify::wishlist()->update($items);
-			}
-			catch (Exception $e)
-			{
-				echo $e->getMessage();
-				die;
-			}
-
-			// Redirect back to the wishlist home.
-			//
-			return Redirect::to('cartify/wishlist')->with('success', 'Your wishlist was updated.');
-		}
-
 		// If we are emptying the wishlist.
 		//
-		elseif (Input::get('empty'))
+		if (Input::get('empty'))
 		{
 			// Let's make the cart empty!
 			//
@@ -107,14 +71,9 @@ class Cartify_Wishlist_Controller extends Controller
 			return Redirect::to('cartify/wishlist')->with('warning', 'Your wishlist was cleared!');
 		}
 
-
-		// Let's make the wishlist empty!
-		//
-		Cartify::wishlist()->destroy();
-
 		// Redirect back to the wishlist page.
 		//
-		return Redirect::to('cartify/wishlist')->with('warning', 'Your wishlist was cleared!');
+		return Redirect::to('cartify/wishlist');
 	}
 
 	/**

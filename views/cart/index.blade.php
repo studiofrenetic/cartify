@@ -20,7 +20,7 @@
 
 			<tr>
 				<td class="align-center">
-					<span class="span1 thumbnail"><img src="{{ URL::to_asset('bundles/cartify/img/products/' . $item['image']) }}" /></span>
+					<span class="span1 thumbnail"><img src="{{ URL::to_asset('bundles/cartify/products/' . $item['image']) }}" /></span>
 				</td>
 				<td>
 					<strong>{{ $item['name'] }}</strong>

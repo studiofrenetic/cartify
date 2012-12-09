@@ -25,7 +25,7 @@ namespace Cartify\Models;
  */
 class Products
 {
-	public static function get_list()
+	public static function all()
 	{
 		// Declare our static products, this is just for the example !!!
 		//
@@ -86,7 +86,7 @@ class Products
 	{
 		// Get the list of products.
 		//
-		$products = static::get_list();
+		$products = static::all();
 
 		// Return the product options.
 		//

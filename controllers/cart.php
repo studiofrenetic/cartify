@@ -74,7 +74,7 @@ class Cartify_Cart_Controller extends Controller
 				{
 					$items[] = array(
 						'rowid' => $rowid,
-						'qty'   => $qty,
+						'qty'   => $qty
 					);
 				}
 
@@ -136,7 +136,6 @@ class Cartify_Cart_Controller extends Controller
 	 * @param    string
 	 * @return   void
 	 */
-	# DONE !
 	public function get_remove($item_id = null)
 	{
 		try

@@ -44,9 +44,13 @@ class Cartify_Home_Controller extends Controller
 	 */
 	public function get_index()
 	{
+		// Get the products.
+		//
+		$products = Products::all();
+
 		// Show the page.
 		//
-		return View::make('cartify::home')->with('products', Products::get_list());
+		return View::make('cartify::home')->with('products', $products);
 	}
 
 	/**
@@ -63,7 +67,7 @@ class Cartify_Home_Controller extends Controller
 
 		// Get the static list of products.
 		//
-		$products = Products::get_list();
+		$products = Products::all();
 
 		// Retrieve some data.
 		//

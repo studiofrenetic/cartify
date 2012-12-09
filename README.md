@@ -237,6 +237,48 @@ It is included an Whishlist method to help you, and you can even create multiple
 	Cartify::wishlist('my_other_wishlist')->add($item);
 ```
 
+
+
+##Exceptions
+
+Some methods on the Cart library throws Exceptions, bellow you have a list of all the Exceptions that are thrown.
+
+An extended example on how to use the Exceptions are in the controllers/home.php controller.
+
+	Cartify\CartException
+
+This Exception is Thrown when an unexpected error occures.
+
+	Cartify\CartInvalidDataException
+
+.
+
+	Cartify\CartItemNotFoundException
+
+This Exception is Thrown when an item is not found in the shopping cart.
+
+	Cartify\CartRequiredIndexException
+
+This Exception is Thrown when a required index
+
+	Cartify\CartInvalidItemRowIdException
+
+.
+
+	Cartify\CartInvalidItemNameException
+
+.
+
+	Cartify\CartInvalidItemQuantityException
+
+.
+
+	Cartify\CartInvalidItemPriceException
+
+.
+
+
+
 ## Credits
 
 	CodeIgniter for writing this Library.

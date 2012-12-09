@@ -24,9 +24,9 @@ use Laravel\Session;
  * Cartify Cart Exceptions.
  */
 class CartException extends CartifyException {}
-class CartItemNotFoundException extends CartException {}
-class CartRequiredIndexException extends CartException {}
 class CartInvalidDataException extends CartException {}
+class CartRequiredIndexException extends CartException {}
+class CartItemNotFoundException extends CartException {}
 class CartInvalidItemRowIdException extends CartException {}
 class CartInvalidItemNameException extends CartException {}
 class CartInvalidItemQuantityException extends CartException {}
@@ -112,7 +112,7 @@ class Cartify_Cart
 	}
 
 	/**
-	 * Returns an item information.
+	 * Returns information about an item.
 	 *
 	 * @access   public
 	 * @param    string
