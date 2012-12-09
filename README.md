@@ -14,12 +14,12 @@
 
 **Modify application/bundles.php**
 ```php
-	return array(
-		'cartify' => array(
-			'handles' => 'cartify', // this is mainly for the examples
-			'auto'    => true
-		),
-	);
+return array(
+	'cartify' => array(
+		'handles' => 'cartify', // this is mainly for the examples
+		'auto'    => true
+	),
+);
 ```
 
 **Publish Assets**
@@ -35,7 +35,26 @@ Now visit http://yoursite.com/index.php/cartify and you should see the example p
 ####Adding a single item to the Cart
 To add an item to the shopping cart, simply pass an array with the product information to the Cartify::cart()->insert() method, as shown below:
 ```php
-	$item = array(
+$item = array(
+	'id'      => 'sku_123ABC',
+	'qty'     => 1,
+	'price'   => 39.95,
+	'name'    => 'T-Shirt',
+	'options' => array(
+		'size'  => 'L',
+		'color' => 'Red'
+	)
+);
+
+Cartify::cart()->insert($item);
+```
+
+####Adding multiple items to the Cart
+By using a multi-dimensional array, as shown below, it is possible to add multiple items to the cart in one action.
+This is useful in cases where you wish to allow people to select from among several items on the same page.
+```php
+$items = array(
+	array(
 		'id'      => 'sku_123ABC',
 		'qty'     => 1,
 		'price'   => 39.95,
@@ -44,41 +63,22 @@ To add an item to the shopping cart, simply pass an array with the product infor
 			'size'  => 'L',
 			'color' => 'Red'
 		)
-	);
+	),
+	array(
+		'id'    => 'sku_567ZYX',
+		'qty'   => 1,
+		'price' => 9.95,
+		'name'  => 'Coffee Mug'
+	),
+	array(
+		'id'    => 'sku_965QRS',
+		'qty'   => 1,
+		'price' => 29.95,
+		'name'  => 'Shot Glass'
+	)
+);
 
-	Cartify::cart()->insert($item);
-```
-
-####Adding multiple items to the Cart
-By using a multi-dimensional array, as shown below, it is possible to add multiple items to the cart in one action.
-This is useful in cases where you wish to allow people to select from among several items on the same page.
-```php
-	$items = array(
-		array(
-			'id'      => 'sku_123ABC',
-			'qty'     => 1,
-			'price'   => 39.95,
-			'name'    => 'T-Shirt',
-			'options' => array(
-				'size'  => 'L',
-				'color' => 'Red'
-			)
-		),
-		array(
-			'id'    => 'sku_567ZYX',
-			'qty'   => 1,
-			'price' => 9.95,
-			'name'  => 'Coffee Mug'
-		),
-		array(
-			'id'    => 'sku_965QRS',
-			'qty'   => 1,
-			'price' => 29.95,
-			'name'  => 'Shot Glass'
-		)
-	);
-
-	Cartify::cart()->insert($items);
+Cartify::cart()->insert($items);
 ```
 
 ####Important:
@@ -111,43 +111,43 @@ If the quantity is set to zero, the item will be removed from the cart!
 
 ####Updating a single item:
 ```php
-	$item = array(
+$item = array(
+	'rowid'   => 'b99ccdf16028f015540f341130b6d8ec',
+	'qty'     => 3,
+	'options' => array(
+		'size'  => 'M',
+		'color' => 'Red'
+	)
+);
+
+Cartify::cart()->update($item);
+```
+
+####Updating multiple items:
+```php
+$items = array(
+	array(
 		'rowid'   => 'b99ccdf16028f015540f341130b6d8ec',
 		'qty'     => 3,
 		'options' => array(
 			'size'  => 'M',
 			'color' => 'Red'
 		)
-	);
-
-	Cartify::cart()->update($item);
-```
-
-####Updating multiple items:
-```php
-	$items = array(
-		array(
-			'rowid'   => 'b99ccdf16028f015540f341130b6d8ec',
-			'qty'     => 3,
-			'options' => array(
-				'size'  => 'M',
-				'color' => 'Red'
-			)
-		),
-		array(
-			'rowid' => 'xw82g9q3r495893iajdh473990rikw23',
-			'qty'   => 4
-		),
-		array(
-			'rowid'   => 'fh4kdkkkaoe30njgoe92rkdkkobec333',
-			'qty'     => 2,
-			'options' => array(
-				'color' => 'Yellow'
-			)
+	),
+	array(
+		'rowid' => 'xw82g9q3r495893iajdh473990rikw23',
+		'qty'   => 4
+	),
+	array(
+		'rowid'   => 'fh4kdkkkaoe30njgoe92rkdkkobec333',
+		'qty'     => 2,
+		'options' => array(
+			'color' => 'Yellow'
 		)
-	);
+	)
+);
 
-	Cartify::cart()->update($items);
+Cartify::cart()->update($items);
 ```
 
 ####What is a Row ID?
@@ -161,9 +161,9 @@ In nearly all cases, updating the cart will be something the user does via the "
 
 ##Removing items from the Cart
 To remove an item from your cart, you must pass the Row ID to the Cartify::cart()->remove() method:
-
-	Cartify::cart()->remove('fh4kdkkkaoe30njgoe92rkdkkobec333');
-
+```php
+Cartify::cart()->remove('fh4kdkkkaoe30njgoe92rkdkkobec333');
+```
 
 
 ##Displaying the Cart
@@ -173,27 +173,27 @@ To display the cart you will create a view file with code similar to the one sho
 
 ## Function Reference
 ```php
-	Cartify::cart()->item(rowid)
+Cartify::cart()->item(rowid)
 ```
 Returns all the information about an item from the shopping cart.
 
 ```php
-	Cartify::cart()->insert();
+Cartify::cart()->insert();
 ```
 Permits you to add items to the shopping cart.
 
 ```php
-	Cartify::cart()->update();
+Cartify::cart()->update();
 ```
 Permits you to update items in the shopping cart.
 
 ```php
-	Cartify::cart()->remove(rowid);
+Cartify::cart()->remove(rowid);
 ```
 Permits you to remove an item from the shopping cart.
 
 ```php
-	Cartify::cart()->total();
+Cartify::cart()->total();
 ```
 Displays the total amount in the cart.
 
@@ -203,22 +203,22 @@ Displays the total amount in the cart.
 Displays the total number of items in the cart.
 
 ```php
-	Cartify::cart()->contents();
+Cartify::cart()->contents();
 ```
 Returns an array containing everything in the cart.
 
 ```php
-	Cartify::cart()->has_options(rowid);
+Cartify::cart()->has_options(rowid);
 ```
 Returns TRUE (boolean) if a particular row in the cart contains options. This function is designed to be used in a loop with Cartify::cart()->contents(), since you must pass the rowid to this function, as shown in the Displaying the Cart example above.
 
 ```php
-	Cartify::cart()->item_options(rowid);
+Cartify::cart()->item_options(rowid);
 ```
 Returns an array of options for a particular item. This function is designed to be used in a loop with Cartify::cart()->contents(), since you must pass the rowid to this function, as shown in the Displaying the Cart example above.
 
 ```php
-	Cartify::cart()->destroy();
+Cartify::cart()->destroy();
 ```
 Permits you to destroy the cart. This function will likely be called when you are finished processing the customer's order.
 
@@ -228,13 +228,13 @@ It is now possible to have multiple instances of the cart class.
 
 You just need to pass in the name of the cart like so:
 ```php
-	Cartify::cart('my_other_cart')->add($item);
+Cartify::cart('my_other_cart')->add($item);
 ```
 
 It is included an Whishlist method to help you, and you can even create multiple wishlist's aswell, like so:
 ```php
-	Cartify::wishlist()->add($item);
-	Cartify::wishlist('my_other_wishlist')->add($item);
+Cartify::wishlist()->add($item);
+Cartify::wishlist('my_other_wishlist')->add($item);
 ```
 
 
