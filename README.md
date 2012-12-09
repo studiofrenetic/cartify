@@ -275,7 +275,7 @@ This Exception is Thrown when the quantity is invalid.
 
 This Exception is Thrown when an Item Price is invalid.
 
-	An extended example on how to use the Exceptions are in the controllers/home.php controller.
+	To better understand on how to use the Exceptions, you can check the example controllers.
 
 
 
