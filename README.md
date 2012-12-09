@@ -241,15 +241,15 @@ It is included an Whishlist method to help you, and you can even create multiple
 
 ##Exceptions
 
-Some methods on the Cart library throws Exceptions, bellow you have a list of all the Exceptions that are thrown.
+Some methods on the Cart library throws Exceptions, bellow you have a list of all the Exceptions.
 
 	Cartify\CartException
 
-This Exception is Thrown when an unexpected error occures.
+This Exception is Thrown when an unexpected error occurred.
 
 	Cartify\CartInvalidDataException
 
-.
+This Exception is Thrown when an array is not passed when inserting or updating cart items.
 
 	Cartify\CartItemNotFoundException
 
@@ -257,23 +257,23 @@ This Exception is Thrown when an item is not found in the shopping cart.
 
 	Cartify\CartRequiredIndexException
 
-This Exception is Thrown when a required index
+This Exception is Thrown when a required index is missing from the array.
 
 	Cartify\CartInvalidItemRowIdException
 
-.
+This Exception is Thrown when an Item Row ID is invalid.
 
 	Cartify\CartInvalidItemNameException
 
-.
+This Exception is Thrown when an Item Name is invalid.
 
 	Cartify\CartInvalidItemQuantityException
 
-.
+This Exception is Thrown when the quantity is invalid.
 
 	Cartify\CartInvalidItemPriceException
 
-.
+This Exception is Thrown when an Item Price is invalid.
 
 	An extended example on how to use the Exceptions are in the controllers/home.php controller.
 
