@@ -18,4 +18,4 @@
 #############################################################
 
 
-Route::Controller( Controller::detect('cartify') );
+Route::Controller(Controller::detect('cartify'));
