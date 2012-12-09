@@ -100,7 +100,7 @@ class Cartify_Home_Controller extends Controller
 				//
 				Cartify::wishlist()->insert($item);
 			}
-/*
+
 			// Check if we have invalid data passed.
 			//
 			catch (Cartify\CartInvalidDataException $e)
@@ -125,7 +125,7 @@ class Cartify_Home_Controller extends Controller
 			{
 				// Redirect back to the home page.
 				//
-				return Redirect::to('cartify')->with('error', 'Invalid item quantity.'');
+				return Redirect::to('cartify')->with('error', 'Invalid item quantity.');
 			}
 
 			// Check if the item row id is invalid.
@@ -139,7 +139,7 @@ class Cartify_Home_Controller extends Controller
 
 			// Check if the item name is invalid.
 			//
-			catch (Cartify\InvalidItemNameException $e)
+			catch (Cartify\CartInvalidItemNameException $e)
 			{
 				// Redirect back to the home page.
 				//
@@ -154,7 +154,7 @@ class Cartify_Home_Controller extends Controller
 				//
 				return Redirect::to('cartify')->with('error', 'Invalid item price.');
 			}
-*/
+
 			// Maybe we want to catch all the errors? Sure.
 			//
 			catch (Cartify\CartException $e)
@@ -179,7 +179,7 @@ class Cartify_Home_Controller extends Controller
 				//
 				Cartify::cart()->insert($item);
 			}
-/*
+
 			// Check if we have invalid data passed.
 			//
 			catch (Cartify\CartInvalidDataException $e)
@@ -204,7 +204,7 @@ class Cartify_Home_Controller extends Controller
 			{
 				// Redirect back to the home page.
 				//
-				return Redirect::to('cartify')->with('error', 'Invalid item quantity.'');
+				return Redirect::to('cartify')->with('error', 'Invalid item quantity.');
 			}
 
 			// Check if the item row id is invalid.
@@ -218,7 +218,7 @@ class Cartify_Home_Controller extends Controller
 
 			// Check if the item name is invalid.
 			//
-			catch (Cartify\InvalidItemNameException $e)
+			catch (Cartify\CartInvalidItemNameException $e)
 			{
 				// Redirect back to the home page.
 				//
@@ -233,7 +233,7 @@ class Cartify_Home_Controller extends Controller
 				//
 				return Redirect::to('cartify')->with('error', 'Invalid item price.');
 			}
-*/
+
 			// Maybe we want to catch all the errors? Sure.
 			//
 			catch (Cartify\CartException $e)

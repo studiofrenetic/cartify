@@ -91,7 +91,19 @@ class Cartify_Wishlist_Controller extends Controller
 			//
 			Cartify::wishlist()->remove($rowid);
 		}
-		catch (Cartify\ItemNotFoundException $e)
+
+		// Is the Item Row ID valid?
+		//
+		catch (Cartify\CartInvalidItemRowIdException $e)
+		{
+			// Redirect back to the wishlist page.
+			//
+			return Redirect::to('cartify/wishlist')->with('error', 'Invalid Item Row ID!');
+		}
+
+		// Does this item exists on the wishlist?
+		//
+		catch (Cartify\CartItemNotFoundException $e)
 		{
 			// Redirect back to the wishlist page.
 			//
@@ -126,13 +138,13 @@ class Cartify_Wishlist_Controller extends Controller
 			//
 			Cartify::cart()->insert($item);
 		}
-		catch (Cartify\Libraries\InvalidItemIdException $e)
+		catch (Cartify\CartInvalidItemIdException $e)
 		{
 			// Redirect back to the wishlist page.
 			//
 			return Redirect::to('cartify/wishlist')->with('error', 'Invalid Item Row ID!');
 		}
-		catch (Cartify\Libraries\ItemNotFoundException $e)
+		catch (Cartify\CartItemNotFoundException $e)
 		{
 			// Redirect back to the wishlist page.
 			//
@@ -141,6 +153,6 @@ class Cartify_Wishlist_Controller extends Controller
 
 		// Redirect to the shopping cart page.
 		//
-		return Redirect::to('cartify/cart')->with('success', 'The product was added to your shopping cart!');
+		return Redirect::to('cartify/cart')->with('success', 'The item was added to your shopping cart!');
 	}
 }
