@@ -23,7 +23,7 @@
 					<span class="span1 thumbnail"><img src="{{ URL::to_asset('bundles/cartify/products/' . $item['image']) }}" /></span>
 				</td>
 				<td>
-					<strong>{{ $item['name'] }}</strong>
+					<strong><a href="{{ URL::to('cartify/view/' . Str::slug($item['name'])) }}">{{ $item['name'] }}</a></strong>
 
 					<span class="pull-right">
 						<a href="{{ URL::to('cartify/cart/remove/' . $item['rowid']) }}" rel="tooltip" title="Remove the product" class="btn btn-mini btn-danger"><i class="icon icon-white icon-remove"></i></a>

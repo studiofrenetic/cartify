@@ -21,7 +21,7 @@
 					<span class="span1 thumbnail"><img src="{{ URL::to_asset('bundles/cartify/products/' . $item['image']) }}" /></span>
 				</td>
 				<td>
-					<strong>{{ $item['name'] }}</strong>
+					<strong><a href="{{ URL::to('cartify/view/' . Str::slug($item['name'])) }}">{{ $item['name'] }}</a></strong>
 
 					<span class="pull-right">
 						<a href="{{ URL::to('cartify/wishlist/add_to_cart/' . $item['rowid']) }}" xdata-target="#AddToCartModel" data-rowid="{{ $item['rowid'] }}" data-toggle="modal" class="btn btn-mini btn-info add_to_cart" rel="tooltip" title="Add to the Shopping Cart"><i class="icon icon-white icon-shopping-cart"></i></a>
