@@ -33,7 +33,7 @@
 					@if (Cartify::cart()->has_options($item['rowid']))
 					<small>
 						<ul class="unstyled">
-						@foreach ($item['options'] as $option_name => $option_value)
+						@foreach (Cartify::cart()->item_options($item['rowid']) as $option_name => $option_value)
 							<li>- <small>{{ $option_name }}: {{ array_get($product_options, $option_name . '.' . $option_value) }}</small></li>
 						@endforeach
 						</ul>

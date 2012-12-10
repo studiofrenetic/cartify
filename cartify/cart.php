@@ -81,7 +81,7 @@ class Cartify_Cart
 	 * @access   protected
 	 * @var      array
 	 */
-	protected $cart_contents = array();
+	protected $cart_contents = null;
 
 	/**
 	 * Shopping cart initializer.
@@ -95,19 +95,15 @@ class Cartify_Cart
 		//
 		$this->cart_name = (is_null($cart_name) ? Config::get('cartify::cart.cart_name') : $cart_name);
 
-		// Check if we have the Cart contents on the session.
+		// Grab the shopping cart array from the session.
 		//
-		if ($cart_contents = Session::get($this->cart_name))
-		{
-			$this->cart_contents[ $this->cart_name ] = $cart_contents;
-		}
+		$this->cart_contents[ $this->cart_name ] = Session::get($this->cart_name);
 
 		// We don't have any cart session, set some base values.
 		//
-		else
+		if (is_null($this->cart_contents[ $this->cart_name ]))
 		{
-			$this->cart_contents[ $this->cart_name ]['cart_total']  = 0;
-			$this->cart_contents[ $this->cart_name ]['total_items'] = 0;
+			$this->cart_contents[ $this->cart_name ] = array('cart_total' => 0, 'total_items' => 0);
 		}
 	}
 
@@ -152,7 +148,7 @@ class Cartify_Cart
 	{
 		// Check if we have data.
 		//
-		if ( ! is_array($items) or count($items) == 0)
+		if ( ! is_array($items) or count($items) === 0)
 		{
 			throw new CartInvalidDataException;
 		}
@@ -192,7 +188,7 @@ class Cartify_Cart
 
 		// Update the cart if the insert was successful.
 		//
-		if ($update_cart)
+		if ($update_cart === true)
 		{
 			// Update the cart.
 			//
@@ -220,7 +216,7 @@ class Cartify_Cart
 	{
 		// Check if we have data.
 		//
-		if ( ! is_array($items) or count($items) == 0)
+		if ( ! is_array($items) or count($items) === 0)
 		{
 			throw new CartInvalidDataException;
 		}
@@ -260,7 +256,7 @@ class Cartify_Cart
 
 		// Update the cart if the insert was successful.
 		//
-		if ($update_cart)
+		if ($update_cart === true)
 		{
 			// Update the cart.
 			//
@@ -365,16 +361,7 @@ class Cartify_Cart
 	{
 		// Check if this item have options.
 		//
-		if ( ! isset($this->cart_contents[ $this->cart_name ][ $rowid ]['options']) or count($this->cart_contents[ $this->cart_name ][ $rowid ]['options']) === 0)
-		{
-			// We don't have options for this item.
-			//
-			return false;
-		}
-
-		// We have options for this item.
-		//
-		return true;
+		return (array_get($this->cart_contents[ $this->cart_name ], $rowid . '.options') ? true : false);
 	}
 
 	/**
@@ -386,18 +373,9 @@ class Cartify_Cart
 	 */
 	public function item_options($rowid = null)
 	{
-		// Check if this item have options.
-		//
-		if ( ! $this->has_options($rowid))
-		{
-			// No options, return an empty array.
-			//
-			return array();
-		}
-
 		// Return this item options.
 		//
-		return $this->cart_contents[ $this->cart_name ][ $rowid ]['options'];
+		return array_get($this->cart_contents[ $this->cart_name ], $rowid . '.options', array());
 	}
 
 	/**
@@ -433,9 +411,9 @@ class Cartify_Cart
 			}
 		}
 
-		// Prepare the quantity.
+		// Make sure the quantity is a number and remove any leading zeros.
 		//
-		$item['qty'] = trim(preg_replace(array('/([^0-9])/i', '/(^[0]+)/i'), '', $item['qty']));
+		$item['qty'] = (float) $item['qty'];
 
 		// If the quantity is zero or blank there's nothing for us to do.
 		//
@@ -459,8 +437,9 @@ class Cartify_Cart
 		}
 
 		// Prepare the price.
+		// Remove leading zeros and anything that isn't a number or decimal point.
 		//
-		$item['price'] = trim(preg_replace(array('/([^0-9\.])/i', '/(^[0]+)/i'), '', $item['price']));
+		$item['price'] = (float) $item['price'];
 
 		// Is the price a valid number?
 		//
@@ -480,20 +459,11 @@ class Cartify_Cart
 			$rowid = md5($item['id']);
 		}
 
-		// Let's unset this first, just to make sure our index contains only the data from this submission.
+		// Re-create the entry, just to make sure our index contains only the data from this submission.
 		//
-		unset($this->cart_contents[ $this->cart_name ][ $rowid ]);
-
-		// Create a new index with our new row ID.
-		//
-		$this->cart_contents[ $this->cart_name ][ $rowid ]['rowid'] = $rowid;
-
-		// And add the new item to the cart array.
-		//
-		foreach ($item as $key => $val)
-		{
-			$this->cart_contents[ $this->cart_name ][ $rowid ][ $key ] = $val;
-		}
+		$item['rowid'] = $rowid;
+		$item['qty'] += (int) array_get($this->cart_contents[ $this->cart_name ], $rowid . '.qty', 0);
+		$this->cart_contents[ $this->cart_name ][ $rowid ] = $item;
 
 		// Item added with success.
 		//
@@ -530,7 +500,7 @@ class Cartify_Cart
 
 		// Prepare the quantity.
 		//
-		$qty = trim(preg_replace('/([^0-9])/i', '', array_get($item, 'qty', 1)));
+		$qty = (float) array_get($item, 'qty');
 
 		// Unset the qty and the rowid.
 		//
@@ -548,6 +518,8 @@ class Cartify_Cart
 		//
 		if ( ! empty($item))
 		{
+			#$item['rowid'] = $rowid;
+			#$this->cart_contents[ $this->cart_name ][ $rowid ] = $item;
 			// Loop through the item data.
 			//
 			foreach ($item as $key => $val)
@@ -578,10 +550,6 @@ class Cartify_Cart
 		//
 		else
 		{
-			// Make sure we remove the zeros before the numbers like: 01, 02, etc..
-			//
-			$qty = trim(preg_replace('/(^[0]+)/i', '', $qty));
-
 			// Update the item quantity.
 			//
 			$this->cart_contents[ $this->cart_name ][ $rowid ]['qty'] = $qty;
@@ -600,15 +568,10 @@ class Cartify_Cart
 	 */
 	protected function update_cart()
 	{
-		// Unset these so our total can be calculated correctly below.
 		//
-		unset($this->cart_contents[ $this->cart_name ]['total_items']);
-		unset($this->cart_contents[ $this->cart_name ]['cart_total']);
-
-		// Initiate the needed counters.
 		//
-		$total = 0;
-		$items = 0;
+		$this->cart_contents[ $this->cart_name ]['total_items'] = 0;
+		$this->cart_contents[ $this->cart_name ]['cart_total'] = 0;
 
 		// Loop through the cart items.
 		//
@@ -623,18 +586,13 @@ class Cartify_Cart
 
 			// Calculations...
 			//
-			$total += ($item['price'] * $item['qty']);
-			$items += $item['qty'];
+			$this->cart_contents[ $this->cart_name ]['cart_total'] += ($item['price'] * $item['qty']);
+			$this->cart_contents[ $this->cart_name ]['total_items'] += $item['qty'];
 
 			// Set the subtotal of this item.
 			//
 			$this->cart_contents[ $this->cart_name ][ $rowid ]['subtotal'] = ($this->cart_contents[ $this->cart_name ][ $rowid ]['price'] * $this->cart_contents[ $this->cart_name ][ $rowid ]['qty']);
 		}
-
-		// Set the cart total and total items.
-		//
-		$this->cart_contents[ $this->cart_name ]['total_items'] = $items;
-		$this->cart_contents[ $this->cart_name ]['cart_total']  = $total;
 
 		// Is our cart empty?
 		//
@@ -668,10 +626,7 @@ class Cartify_Cart
 	{
 		// Remove all the data from the cart and set some base values
 		//
-		$this->cart_contents[ $this->cart_name ] = array(
-			'cart_total'  => 0,
-			'total_items' => 0
-		);
+		$this->cart_contents[ $this->cart_name ] = array('cart_total' => 0, 'total_items' => 0);
 
 		// Remove the session.
 		//
