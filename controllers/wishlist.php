@@ -132,7 +132,11 @@ class Cartify_Wishlist_Controller extends Controller
 
 			// Unset unnecessary data.
 			//
-			unset($item['subtotal']);
+			array_forget($item, 'subtotal');
+
+			// Make sure the quantity is 1
+			//
+			$item['qty'] = 1;
 
 			// Add the item to the shopping cart.
 			//

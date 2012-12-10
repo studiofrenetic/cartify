@@ -31,10 +31,9 @@ if ( ! function_exists('format_number'))
 
 		// Remove anything that isn't a number or decimal point.
 		//
-		#$number = trim(preg_replace('/([^0-9\.])/i', '', $number));
 		$number = (float) $number;
 
-		// Return the formated number.
+		// Return the formatted number.
 		//
 		return number_format($number, 2, '.', ',');
 	}
