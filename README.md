@@ -224,17 +224,17 @@ Permits you to destroy the cart. This function will likely be called when you ar
 
 
 ## Multiple instances of the Cart
-It is now possible to have multiple instances of the cart class.
+It is possible to have multiple instances of the cart class.
 
 You just need to pass in the name of the cart like so:
 ```php
-Cartify::cart('my_other_cart')->add($item);
+Cartify::cart('my_other_cart')->insert($item);
 ```
 
 It is included an Whishlist method to help you, and you can even create multiple wishlist's aswell, like so:
 ```php
-Cartify::wishlist()->add($item);
-Cartify::wishlist('my_other_wishlist')->add($item);
+Cartify::wishlist()->insert($item);
+Cartify::wishlist('my_other_wishlist')->insert($item);
 ```
 
 
