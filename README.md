@@ -1,5 +1,5 @@
 #Cartify
-**Version: 2.1.0**
+**Version: 2.1.1**
 
 	A Shopping Cart Bundle for Laravel, based on the Cart library from CodeIgniter.
 
