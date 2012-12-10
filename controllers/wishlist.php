@@ -130,11 +130,7 @@ class Cartify_Wishlist_Controller extends Controller
 			//
 			$item = Cartify::wishlist()->item($rowid);
 
-			// Unset unnecessary data.
-			//
-			array_forget($item, 'subtotal');
-
-			// Make sure the quantity is 1
+			// Make sure the quantity is 1, since we can add the item to the wishlist multiple times!
 			//
 			$item['qty'] = 1;
 
