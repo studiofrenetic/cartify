@@ -1,3 +1,7 @@
+**Version: 2.1.1**
+
+	* Cart class code improvements.
+
 **Version: 2.1.0**
 
 	* Added a new item() method to the cart class.
