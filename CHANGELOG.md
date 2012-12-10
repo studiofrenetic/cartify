@@ -1,6 +1,9 @@
 **Version: 2.1.1**
 
 	* Cart class code improvements.
+	* Adding an item that already exists on the shopping cart, the item quantity on the shopping cart is incremented.
+	* Some views updates.
+	* Using more Laravel helper functions.
 
 **Version: 2.1.0**
 
