@@ -8,9 +8,9 @@
 
 	php artisan bundle:install cartify
 
-**Git Submodule**
+**Git Clone**
 
-	git submodule add git@github.com:bruno-g/cartify.git bundles/cartify
+	git clone http://github.com/brunogaspar/cartify bundles/cartify
 
 **Modify application/bundles.php**
 ```php
