@@ -540,9 +540,9 @@ class Cartify_Cart
 			return true;
 		}
 
-		// If the quantity is zero, we will be removing the item from the cart.
+		// If the quantity is zero or less, we will be removing the item from the cart.
 		//
-		if ($qty == 0)
+		if ($qty <= 0)
 		{
 			// Remove the item from the cart.
 			//
