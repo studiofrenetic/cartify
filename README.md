@@ -263,10 +263,6 @@ This Exception is Thrown when a required index is missing from the array.
 
 This Exception is Thrown when an Item Row ID is invalid.
 
-	Cartify\CartInvalidItemNameException
-
-This Exception is Thrown when an Item Name is invalid.
-
 	Cartify\CartInvalidItemQuantityException
 
 This Exception is Thrown when the quantity is invalid.

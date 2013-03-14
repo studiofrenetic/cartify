@@ -28,7 +28,6 @@ class CartInvalidDataException extends CartException {}
 class CartRequiredIndexException extends CartException {}
 class CartItemNotFoundException extends CartException {}
 class CartInvalidItemRowIdException extends CartException {}
-class CartInvalidItemNameException extends CartException {}
 class CartInvalidItemQuantityException extends CartException {}
 class CartInvalidItemPriceException extends CartException {}
 
@@ -50,22 +49,6 @@ class Cartify_Cart
 	 * @var      string
 	 */
 	protected $item_id_rules = '\.a-z0-9_-';
-
-	/**
-	 * Regular expression to validate item Names.
-	 *
-	 *  Allowed:
-	 *		alpha-numeric
-	 *		dashes
-	 *		underscores
-	 *		colons
-	 *		periods
-	 *		accents
-	 *
-	 * @access   protected
-	 * @var      string
-	 */
-	protected $item_name_rules = '^.';
 
 	/**
 	 * Holds the cart name.
@@ -427,13 +410,6 @@ class Cartify_Cart
 		if ( ! preg_match('/^[' . $this->item_id_rules . ']+$/i', $item['id']))
 		{
 			throw new CartInvalidItemRowIdException;
-		}
-
-		// Validate the item name.
-		//
-		if ( ! preg_match('/^[' . $this->item_name_rules . ']+$/i', $item['name']))
-		{
-			throw new InvalidItemNameException;
 		}
 
 		// Prepare the price.
